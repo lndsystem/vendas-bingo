@@ -1,0 +1,22 @@
+<p-panel>
+    <div class="container">
+        <h3 class="lnd-titulo-upper">Consulta de Bilhetes</h3>
+        <span>Pesquise suas últimas compras</span>
+        <div style="width: 95%;">
+            <label>CPF</label><br/>
+            <p-inputmask 
+                #doc 
+                mask="999.999.999-99" 
+                placeholder="___.___.___-__" 
+                [style]="{'width': '100%'}" 
+                [(ngModel)]="documento" 
+            />
+            @if (exibirMsg) {
+            <div class="lnd-msg-error" >
+                <span>CPF deve conter pelo menos 11 dígitos</span>
+            </div>
+            }
+        </div>
+        <p-button label="Consultar" (click)="pesquisar()"/>
+    </div>
+</p-panel>

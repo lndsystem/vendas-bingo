@@ -1,0 +1,89 @@
+/* You can add global styles to this file, and also import other style files */
+* {
+    margin: 0;
+    font-family: 'Roboto' sans-serif;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+.separacao {
+    height: 14px;
+}
+
+.p-button {
+    padding: 8px 40px !important;
+    border-radius: 30px !important;
+}
+
+.p-button-label {
+    font-weight: 400 !important;
+    font-size: .9rem;
+}
+
+.lnd-logo {
+    width: 8rem;
+}
+
+.lnd-flexbox-beetwen-full {
+    display: flex;
+    justify-content: space-between; 
+    width: 100%; 
+    align-items: center;
+}
+.lnd-flexbox-full {
+    display: flex; 
+    width: 100%; 
+    align-items: center;
+    gap: 20px;
+}
+
+.lnd-subtitulo {
+    font-weight: 100;
+    font-size: .9rem;
+}
+
+.lnd-titulo-upper {
+    text-transform: uppercase;
+}
+
+.p-panel-header {
+    margin: 0 !important; 
+    padding:  9px 0 !important;
+}
+
+.lnd-msg-error {
+    color: red;
+    margin-top: 10px;
+    font-size: .8rem;
+}
+
+.lnd-btn-app {
+    width: 224px;
+    height: 48px;
+    background-color: #1e293b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    /*margin: 10px 10px;*/
+}
+
+@media (max-width: 640px)  {
+    .lnd-flexbox-beetwen-full {
+        flex-direction: column;
+    }
+
+    .lnd-flexbox-full {
+        flex-direction: column;
+    }
+
+    .lnd-rodape-header {
+        margin-top: 20px;
+    }
+
+    .lnd-content {
+        text-align: center;
+    }
+}
