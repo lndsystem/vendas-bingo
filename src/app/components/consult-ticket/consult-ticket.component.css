@@ -1,0 +1,286 @@
+.container {
+    margin: 0 auto; 
+    padding: 5px 5px; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    width: 100%; 
+    max-width: 1200px;
+    gap: 8px;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    width: 100%;
+    padding: 0;
+}
+
+.card {
+    border: 1px solid #b3d9ff;
+    border-radius: 12px;
+    padding: 8px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    
+    min-width: 0;
+    /* overflow: hidden; */
+}
+
+.card-inner {
+    display: flex;
+    gap: 8px;
+}
+
+.card-left {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 120px;
+}
+
+.draw-info-card {
+    border: 1px solid #b3d9ff;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.info-icon {
+    color: #94a3b8;
+    font-size: 1.2rem;
+    margin-top: 8px;
+}
+
+.info-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.info-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.info-value {
+    font-size: .8em;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.status-badge {
+    background-color: #fee2e2;
+    color: #991b1b;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.card-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.order-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 230px;
+}
+
+.info-row {
+    display: flex;
+    gap: 8px;
+    align-items: baseline;
+}
+
+.info-row .info-label {
+    flex-shrink: 0;
+}
+
+.info-row-bottom {
+    display: flex;
+    gap: 2px;
+    align-items: baseline;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.info-row-bottom-value {
+    display: flex;
+    align-items: baseline;
+}
+
+.icons-container-value {
+    margin: -4px 4px;
+}
+
+.icons-container {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    margin-left: auto;
+}
+
+.info-value-bold {
+    font-weight: 600;
+    color: #1e293b;
+    font-size: 0.8rem;
+}
+
+.info-velue-bold-wrap {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.icons-end {
+    color: #94a3b8;
+    font-size: 1.1rem;
+}
+
+.icons-end:last-of-type {
+    color: #60a5fa;
+}
+
+.card-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: auto;
+}
+
+::ng-deep .btn-ver-bilhetes {
+    border-color: #b3d9ff !important;
+    color: #1e293b !important;
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 8px 24px !important;
+}
+
+::ng-deep .btn-ver-bilhetes:hover {
+    background-color: #f0f9ff !important;
+}
+
+.dezenas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+    max-width: calc(5 * 50px + (5 - 1) * 10px);
+    gap: 10px;
+}
+
+.dezena-circle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: lightgray;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0 auto;
+}
+
+.dezenas-grid-titulo {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    max-width: calc(6 * 50px + (6 - 1) * 10px);
+    gap: 10px;
+}
+
+.dezena-circle-titulo {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: lightgray;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0 auto;
+}
+
+.dezena-premiada {
+    background-color: var(--p-button-primary-hover-background);
+    color: white;
+}
+
+.premio-descricao {
+    text-align: left;
+}
+
+.premio-cartela {
+    margin-bottom: 20px;
+}
+
+.premio-chance {
+    width: 100%;
+    height: 30px;
+    align-items: center;
+    background-color: #0D095D;
+    border-radius: 6px;
+    display: flex;
+    padding-left: 10px;
+    color: white;
+    font-weight: 400;
+    margin: 0 0 20px 0;
+}
+
+@media (max-width: 640px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .cards-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 0;
+    }
+
+    .order-info {
+        max-width: 100%;
+    }
+
+    .draw-info-card {
+        align-items: center;
+    }
+
+    .card-inner {
+        flex-direction: column;
+    }
+
+    .card-left {
+        min-width: 100%;
+    }
+
+    .info-row-bottom {
+        flex-wrap: wrap;
+    }
+}

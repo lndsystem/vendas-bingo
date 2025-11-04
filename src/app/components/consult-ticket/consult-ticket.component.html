@@ -1,0 +1,143 @@
+<p-panel>
+    <div class="container">
+        @if (titulos && titulos.length == 0) {
+            <div>
+                <h3>Nenhum título encontrado para o CPF informado.</h3>
+            </div>
+        }
+        <div class="cards-grid">
+            @for (ticket of titulos; track ticket.referencia) {
+                <div class="card">
+                    <div class="card-inner">
+                        <!-- Seção Esquerda: Data e Horário -->
+                        <div class="card-left">
+                            <div class="draw-info-card">
+                                <div class="info-item">
+                                    <i class="pi pi-calendar info-icon"></i>
+                                    <div class="info-content">
+                                        <span class="info-label">Data Sorteio</span>
+                                        <span class="info-value">{{ ticket.dataSorteio | date: 'dd/MM/yyyy'}}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <i class="pi pi-clock info-icon"></i>
+                                    <div class="info-content">
+                                        <span class="info-label">Horário</span>
+                                        <span class="info-value">{{ ticket.hora }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Seção Direita: Informações do Pedido -->
+                        <div class="card-right">
+                            <div class="order-info">
+                                <div class="info-row">
+                                    <span class="info-label">Pedido:</span>
+                                    <span class="info-value-bold info-velue-bold-wrap" [title]="ticket.referencia">{{ ticket.referencia }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Título:</span>
+                                    <span class="info-value-bold">{{ ticket.titulo | numberFormat : 6 }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Premiação:</span>
+                                    <span class="info-value-bold">{{ ticket.premiacao }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-row-bottom">
+                        @if (ticket.status === 'F') {
+                        <div>
+                            <span class="status-badge">Encerrado</span>
+                        </div>
+                        }
+                        <div>
+                            <span class="info-label">Quantidade: </span>
+                            <span class="info-value-bold">1</span>
+                        </div>
+                        <div class="info-row-bottom-value">
+                            <span class="info-label">Total:&nbsp;</span>
+                            <span class="info-value-bold">R$ {{ ticket.valor | numberFormat : 0:'0':'.':',':2}}</span>
+                            <div class="icons-container-value">
+                                <i class="pi pi-gem icons-end"></i>
+                                <i class="pi pi-check-circle icons-end"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <p-button 
+                            label="Ver bilhetes" 
+                            [outlined]="true"
+                            (click)="verBilhetes(ticket)"
+                            styleClass="btn-ver-bilhetes"
+                        />
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</p-panel>
+
+<p-dialog  [modal]="true" [(visible)]="visible" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <ng-template #header>
+        <h3>Bilhete Nº: {{ticketSelecionado.titulo | numberFormat : 6 }}</h3>
+    </ng-template>
+    <div class="mb-4"></div>
+    
+    @if (!sorteioJaOcorreu) {
+    <div style="width: 300px; margin: 0 auto; text-align: center;">
+        <div class="dezenas-grid">
+            @for (dezena of ticketSelecionado.cartela; track $index) {
+                <div class="dezena-circle">{{ dezena }}</div>
+            }
+        </div>
+    </div>
+    } @else {
+        <div style="width: 300px; margin: 0 auto; text-align: center;">
+            
+            @for(premio of premios; track $index) {
+                @if (premio.imagem) {
+                <div>
+                    <img style="width: 100%;" src="https://cdn.titulo.click/{{premio.imagem}}">
+                </div>
+                }
+
+                @if (premio.tipo === 'SORTEIO') {
+                    <div class="premio-descricao">
+                        <p>{{premio.ordem}} Prêmio: {{premio.descricao}}</p>
+                    </div>
+                    <div class="premio-chance">
+                        Chance (1)
+                    </div>
+
+                    <div class="premio-cartela">
+                        <div class="dezenas-grid">
+                            @for (dezena of ticketSelecionado.cartela; track $index) {
+                                <div class="dezena-circle {{bolaSorteada(dezena, premio.dezenas)}}">{{ dezena }}</div>
+                            }
+                        </div>
+                    </div>
+                } @else {
+                    <div class="premio-descricao">
+                        <p>{{premio.descricao}}</p>
+                    </div>
+                    <div class="premio-chance">
+                        Número da Sorte (1)
+                    </div>
+                    <div class="dezenas-grid-titulo">
+                        @for (dezena of converterTituloArray(ticketSelecionado.titulo); track $index) {
+                            <div class="dezena-circle-titulo {{bolaSorteada(ticketSelecionado.titulo, premio.dezenas)}}">{{ dezena }}</div>
+                        }
+                    </div>
+                }
+            }
+
+        </div>
+    }
+
+
+    <div class="mb-4"></div>
+</p-dialog>
+

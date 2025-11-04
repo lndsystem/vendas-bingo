@@ -1,0 +1,92 @@
+<p-panel>
+    <div class="container">
+        <div class="col-12 md:col-8 md:col-offset-2">
+            <p-select 
+                [options]="sorteios" 
+                [(ngModel)]="sorteioSelecionado" 
+                optionLabel="name" 
+                placeholder="Selecione uma data" 
+                class="w-full md:w-56" 
+                (onChange)="selectSelecionado()"/>
+        </div>
+        <div class="col-12 md:col-8 md:col-offset-2">
+            @for (premio of premios; track premio.ordem) {
+            <div class="premio-item">
+                <!-- Header Resumido -->
+                <div class="premio-header" (click)="toggleExpanded(premio)">
+                    <div class="premio-header-content">
+                        <div class="premio-info">
+                            @if(premio.tipo === 'SORTEIO') {
+                            <h2 class="premio-ordem">{{ premio.ordem }}º Prêmio</h2>
+                            <p class="premio-descricao">{{ premio.descricao }}</p>
+                            } @else {
+                                <h2 class="premio-ordem">{{ premio.descricao }}</h2>
+                                <p class="premio-descricao">{{ formatarValor(premio.valor) }} cada</p>
+                            }
+                        </div>
+                        <i class="pi pi-chevron-down premio-arrow" [class.rotated]="premio.expanded"></i>
+                    </div>
+                </div>
+
+                <!-- Conteúdo Expandido -->
+                @if (premio.expanded) {
+                    <div class="premio-content">
+                        <!-- Imagem/Representação do Prêmio -->
+                        <div class="premio-visual">
+                            <div class="premio-value-large"><img src="{{premio.imagem}}"></div>
+                            <p class="premio-value-text">PRÊMIO NO VALOR LÍQUIDO DE {{ formatarValor(premio.valor) }}</p>
+                        </div>
+
+                        <!-- Dezenas Sorteadas -->
+                         @if (premio.tipo === 'SORTEIO') {
+                        <div class="dezenas-section">
+                            <h3 class="section-title">Dezenas Sorteadas</h3>
+                            <div class="dezenas-grid">
+                                @for (dezena of premio.dezenas; track $index) {
+                                    <div class="dezena-circle">{{ formatarDezena(dezena) }}</div>
+                                }
+                            </div>
+                        </div>
+                        }
+
+                        <!-- Contemplados -->
+                        <div class="contemplados-section">
+                            <h3 class="section-title">CONTEMPLADOS</h3>
+                            <div class="contemplados-grid">
+                                @for (contemplado of premio.ganhadores; track contemplado.titulo; let i = $index) {
+                                    <div class="contemplado-card">
+                                        <div class="contemplado-field">
+                                            <span class="field-label">#:</span>
+                                            <span class="field-value">{{ i + 1 }}</span>
+                                        </div>
+                                        <div class="contemplado-field">
+                                            <span class="field-label">Nº:</span>
+                                            <span class="field-value">{{ contemplado.titulo }}</span>
+                                        </div>
+                                        <div class="contemplado-field">
+                                            <span class="field-label">Nome:</span>
+                                            <span class="field-value">{{ contemplado.ganhador }}</span>
+                                        </div>
+                                        <div class="contemplado-field">
+                                            <span class="field-label">Bairro:</span>
+                                            <span class="field-value">{{ contemplado.bairro || '' }}</span>
+                                        </div>
+                                        <div class="contemplado-field">
+                                            <span class="field-label">Cidade:</span>
+                                            <span class="field-value">{{ contemplado.cidade || '' }}</span>
+                                        </div>
+                                        <div class="contemplado-field">
+                                            <span class="field-label">PDV:</span>
+                                            <span class="field-value">{{ contemplado.vendedor }}</span>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            }
+        </div>
+    </div>
+</p-panel>

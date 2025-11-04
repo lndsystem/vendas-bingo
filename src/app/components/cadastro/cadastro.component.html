@@ -1,0 +1,63 @@
+<p-dialog [modal]="true" [(visible)]="visible" closeOnEscape="false" closable="false" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    <ng-template #header>
+        <h3>Efetuar Cadastro</h3>
+    </ng-template>
+    <form [formGroup]="myForm">
+        <div class="grid">
+            <div class="col-12">
+                <label for="nome">Nome</label>
+                <input pInputText id="nome" fluid formControlName="nome" />
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="cpf">CPF</label>
+                <p-inputmask id="cpf" mask="999.999.999-99" placeholder="999.999.999-99" [style]="{width: '100%'}" readonly="readonly" formControlName="cpf"></p-inputmask>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="celular">Celular</label>
+                <p-inputmask id="celular" mask="(99) 99999-9999" placeholder="(99) 99999-9999" [style]="{width: '100%'}" formControlName="celular"></p-inputmask>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="uf">UF</label>
+                <div style="display: flex;">
+                    <p-select 
+                        [options]="estados" 
+                        optionLabel="name"
+                        optionValue="code"
+                        placeholder="Estado" 
+                        class="w-full md:w-56"
+                        appendTo="body" 
+                        formControlName="uf"
+                        (onChange)="getMunicipios($event)"
+                    />
+                    @if (loading) {
+                    <p-progress-spinner strokeWidth="6" fill="transparent" animationDuration=".5s" [style]="{ width: '32px', height: '32px' }" />
+                    }
+                </div>
+            </div>
+            <div class="col-12 md:col-6">
+                <label for="municipio">Municipio</label>
+                <p-select 
+                    [options]="municipios" 
+                    optionLabel="name" 
+                    optionValue="code"
+                    placeholder="Municipio" 
+                    class="w-full md:w-56" 
+                    appendTo="body" 
+                    [filter]="true" 
+                    filterBy="name"
+                    formControlName="municipio"
+                />
+            </div>
+            <div class="col-12">
+                <label for="email">E-mail</label>
+                <input pInputText id="email" type="email" fluid formControlName="email" />
+            </div>
+            <div class="col-12">
+                Ao se cadastrar, você autoriza a Agro Mania a comunicar-se via e-mail, SMS e WhatsApp.
+            </div>
+            <div class="col-12">
+                <button pButton (click)="onSubmit()" [disabled]="!myForm.valid">Salvar</button>
+            </div>
+        </div>
+    </form>
+</p-dialog>

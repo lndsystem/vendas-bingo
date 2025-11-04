@@ -8,6 +8,10 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 
 import { definePreset } from '@primeng/themes';
+import { provideHttpClient } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
+import { NumberFormatPipe } from './pipe/number-format.pipe';
+import { MessageService } from 'primeng/api';
 
 const MyPreset = definePreset(Aura, {
     semantic: {
@@ -32,6 +36,10 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }), 
     provideRouter(routes),
     provideAnimationsAsync(),
+    MessageService, 
+    provideHttpClient(),
+    DatePipe,
+    NumberFormatPipe,
     providePrimeNG({
       theme: {
         preset: MyPreset,

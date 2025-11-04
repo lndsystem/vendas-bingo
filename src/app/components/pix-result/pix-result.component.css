@@ -1,0 +1,85 @@
+.container {
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    box-sizing: border-box;
+}
+
+.titulo-pago {
+    text-transform: uppercase;
+    text-align: center;
+    padding: 8px 0;
+    background-color: #adff2f;
+    border-radius: 8px;
+    min-width: 350px;
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+.titulo-pendente {
+    background-color: yellow;
+}
+
+.titulo-title {
+    padding: 8px 0;
+    background-color: #d3d3d3;
+    border-radius: 8px;
+    width: 30%;
+    min-width: 150px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+.titulo-detalhe {
+    padding: 8px 0;
+    background-color: #d3d3d3;
+    border-radius: 8px;
+    width: 70%;
+    text-align: center;
+    font-weight: 500;
+    font-size: 18pt;
+}
+
+.titulo-div {
+    text-transform: uppercase;
+    padding: 8px 0;
+    background-color: #d3d3d3;
+    border-radius: 8px;
+    width: 100%;
+    text-align: center;
+    font-weight: bold;
+    font-size: 18pt;
+}
+
+.div-copie-cola {
+    width: 300px; 
+    word-wrap: break-word; 
+    border-radius: 6px; 
+    border: 1px solid lightgray; 
+    margin-bottom: 20px;
+    padding: 8px 8px;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .titulo-pago {
+        min-width: 10px;
+    }
+    .titulo-title {
+        font-size: 14pt;
+        min-width: 10px;
+    }
+    
+    .titulo-detalhe {
+        font-size: 14pt;
+        min-width: 10px;
+    }
+    
+    .titulo-div {
+        min-width: 10px;
+        font-size: 14pt;
+    }
+}

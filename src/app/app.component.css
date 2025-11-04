@@ -1,11 +1,19 @@
 main {
     background-color: #e2e8f0;
-    height: 100vh;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .container {
     width: 90%;
     max-width: 1280px;
     margin: 0 auto;
-    padding-top: 20px;    
+    padding-top: 20px;
+    flex: 1;
+}
+
+app-footer {
+    margin-top: auto;
+    width: 100%;
 }

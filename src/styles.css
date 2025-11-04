@@ -19,7 +19,7 @@ body {
 
 .p-button-label {
     font-weight: 400 !important;
-    font-size: .9rem;
+    font-size: .9rem;    
 }
 
 .lnd-logo {
@@ -32,6 +32,7 @@ body {
     width: 100%; 
     align-items: center;
 }
+
 .lnd-flexbox-full {
     display: flex; 
     width: 100%; 
@@ -68,6 +69,12 @@ body {
     justify-content: center;
     border-radius: 6px;
     /*margin: 10px 10px;*/
+}
+
+.lnd-rodape-header {
+    min-width: 300px;
+    display: flex;
+    justify-content: space-between;
 }
 
 @media (max-width: 640px)  {

@@ -1,0 +1,83 @@
+<p-panel>
+    <div class="container">
+        @if (dadosTitulo && dadosTitulo.titulo) {
+            <div class="detalhes">
+                <table  style="width: 100%;">
+                    <tbody >
+                        <tr >
+                            <td colspan="2" class="titulo-pago {{!dadosTitulo?.tituloPago ? 'titulo-pendente' : ''}}"> {{dadosTitulo?.tituloPago ? 'Título Pago' : 'Pagamento Pendente'}} </td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">Sorteio:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo?.idSorteio}}</td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">Data:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo?.dataSorteio}}</td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">Consulta:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo?.dataConsulta}}</td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">Título:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo?.numeroTitulo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                @if (dadosTitulo.distribuidor || dadosTitulo.pdv) {
+                <table  style="width: 100%;">
+                    <tbody >                        
+                        <tr >
+                            <td  colspan="2" class="titulo-div"> Dados do Distribuidor </td>
+                        </tr>
+                        @if (dadosTitulo.distribuidor) {
+                        <tr >
+                            <td  class="titulo-title">PDV:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo.distribuidor}}</td>
+                        </tr>
+                        }
+                        @if (dadosTitulo.pdv) {
+                        <tr >
+                            <td  class="titulo-title">Distribuidor:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo.pdv}}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+                }
+
+                @if (dadosTitulo.cliente && dadosTitulo.cliente.nome) {
+                <table  style="width: 100%;">
+                    <tbody >
+                        <tr >
+                            <td  colspan="2" class="titulo-div"> Dados do comprador </td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">Nome:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo.cliente.nome}}</td>
+                        </tr>
+                        <tr >
+                            <td  class="titulo-title">CPF:</td>
+                            <td  class="titulo-detalhe">{{dadosTitulo.cliente.cpf}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                }
+
+                @if (!dadosTitulo.tituloPago) {
+                <div style="text-align: center; margin-top: 20px; display: flex; flex-direction: column; align-items: center;">
+                    <h3>Não fique de fora, pague seu Título e concorra a prêmios.</h3>
+                    <qrcode [qrdata]="dadosTitulo.copieCola" [width]="256" [errorCorrectionLevel]="'M'"></qrcode>
+                    <div #copy class="div-copie-cola" (click)="copiarConteudo(copy)">
+                        {{dadosTitulo.copieCola}}
+                    </div>
+                    <span>Pix válido até às 16:59 do dia do Sorteio: {{dadosTitulo.dataSorteio}}</span>
+                </div>
+                }
+            </div>
+        } @else {
+            <h3>Dados não encontrado</h3>
+        }
+    </div>
+</p-panel>

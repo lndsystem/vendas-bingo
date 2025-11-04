@@ -8,7 +8,7 @@
                 #doc 
                 mask="999.999.999-99" 
                 placeholder="___.___.___-__" 
-                [style]="{'width': '100%'}" 
+                [style]="{'width': '90%'}" 
                 [(ngModel)]="documento" 
             />
             @if (exibirMsg) {
@@ -20,3 +20,7 @@
         <p-button label="Consultar" (click)="pesquisar()"/>
     </div>
 </p-panel>
+
+@if (visible) {
+<app-cadastro [visible]="visible" [documento]="documento"></app-cadastro>
+}
