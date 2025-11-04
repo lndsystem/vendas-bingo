@@ -6,6 +6,8 @@ import { Injectable } from '@angular/core';
 })
 export class TituloService {
 
+  urlApi = 'https://api.titulo.click';
+
   constructor(private http : HttpClient ) { }
 
   _criarHeader(token: string) {
@@ -20,39 +22,39 @@ export class TituloService {
   }
   // Consultar resultados
   getSorteios() {
-    return this.http.get<any[]>(`http://localhost:8080/sorteios/6`);
+    return this.http.get<any[]>(`${this.urlApi}/sorteios/6`);
   }
 
   getResultados(code: any) {
-    return this.http.get<any[]>(`http://localhost:8080/sorteios/ganhadores/${code.sede}/${code.sorteio}`);
+    return this.http.get<any[]>(`${this.urlApi}/sorteios/ganhadores/${code.sede}/${code.sorteio}`);
   }
 
   // Consultar Cliente e Titulos
   getClient(documento: string) {
-    return this.http.post<any>(`http://localhost:8080/clientes`, {cpf : documento});
+    return this.http.post<any>(`${this.urlApi}/clientes`, {cpf : documento});
   }
 
   getTitulosUsuarios(token: string) {
-    return this.http.get<any[]>(`http://localhost:8080/titulos/listar`, this._criarHeader(token));
+    return this.http.get<any[]>(`${this.urlApi}/titulos/listar`, this._criarHeader(token));
   }
 
   getDetalhesTitulo(token: string, sorteio: number, titulo: number) {
-    return this.http.get<any[]>(`http://localhost:8080/titulos/detalhes/${sorteio}/${titulo}`, this._criarHeader(token));
+    return this.http.get<any[]>(`${this.urlApi}/titulos/detalhes/${sorteio}/${titulo}`, this._criarHeader(token));
   }
 
   getEstados() {
-    return this.http.get<any[]>(`http://localhost:8080/enderecos/estados`)
+    return this.http.get<any[]>(`${this.urlApi}/enderecos/estados`)
   }
 
   getMunicipios(uf: string) {
-    return this.http.get<any[]>(`http://localhost:8080/enderecos/${uf}/municipios`)
+    return this.http.get<any[]>(`${this.urlApi}/enderecos/${uf}/municipios`)
   }
 
   salvarCliente(body: any) {
-    return this.http.post<any>(`http://localhost:8080/clientes/salvar`, body);
+    return this.http.post<any>(`${this.urlApi}/clientes/salvar`, body);
   }
 
   verificarReferencia(referencia: string) {
-    return this.http.get<any>(`http://localhost:8080/titulos/${referencia}`);
+    return this.http.get<any>(`${this.urlApi}/titulos/${referencia}`);
   }
 }
