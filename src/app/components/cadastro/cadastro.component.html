@@ -1,23 +1,28 @@
-<p-dialog [modal]="true" [(visible)]="visible" closeOnEscape="false" closable="false" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+<p-dialog [modal]="true" [(visible)]="visible" closeOnEscape="false" closable="false" [style]="{ width: '50rem' }" 
+    
+    [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template #header>
         <h3>Efetuar Cadastro</h3>
     </ng-template>
     <form [formGroup]="myForm">
         <div class="grid">
             <div class="col-12">
-                <label for="nome">Nome</label>
+                <label for="nome" title="Obrigatório" pTooltip="Obrigatório">Nome <span style="color: red" >*</span></label>
                 <input pInputText id="nome" fluid formControlName="nome" />
             </div>
             <div class="col-12 md:col-6">
-                <label for="cpf">CPF</label>
-                <p-inputmask id="cpf" mask="999.999.999-99" placeholder="999.999.999-99" [style]="{width: '100%'}" readonly="readonly" formControlName="cpf"></p-inputmask>
+                <label for="cpf"  title="Obrigatório" pTooltip="Obrigatório">CPF  <span style="color: red" >*</span></label>
+                <p-inputmask id="cpf" mask="999.999.999-99" placeholder="999.999.999-99" [style]="{width: '100%'}" formControlName="cpf"></p-inputmask>
+                @if (cpfControl?.touched && cpfControl?.hasError('cpfMiddleMismatch')) {
+                    <small class="p-error">CPF não corresponde ao cadastrado. {{documentoBanco}}.</small>
+                }
             </div>
             <div class="col-12 md:col-6">
-                <label for="celular">Celular</label>
+                <label for="celular"  title="Obrigatório" pTooltip="Obrigatório">Celular  <span style="color: red" >*</span></label>
                 <p-inputmask id="celular" mask="(99) 99999-9999" placeholder="(99) 99999-9999" [style]="{width: '100%'}" formControlName="celular"></p-inputmask>
             </div>
             <div class="col-12 md:col-6">
-                <label for="uf">UF</label>
+                <label for="uf"  title="Obrigatório" pTooltip="Obrigatório">UF  <span style="color: red" >*</span></label>
                 <div style="display: flex;">
                     <p-select 
                         [options]="estados" 
@@ -35,7 +40,7 @@
                 </div>
             </div>
             <div class="col-12 md:col-6">
-                <label for="municipio">Municipio</label>
+                <label for="municipio"  title="Obrigatório" pTooltip="Obrigatório">Municipio  <span style="color: red" >*</span></label>
                 <p-select 
                     [options]="municipios" 
                     optionLabel="name" 

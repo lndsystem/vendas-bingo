@@ -5,10 +5,11 @@ import { Subscription } from 'rxjs';
 import { TituloService } from '../../service/titulo.service';
 import Swal from 'sweetalert2';
 import { PixResultComponent } from "../../components/pix-result/pix-result.component";
+import { CadastroComponent } from '../../components/cadastro/cadastro.component';
 
 @Component({
   selector: 'app-consult-pix',
-  imports: [HeaderComponent, PixResultComponent],
+  imports: [HeaderComponent, PixResultComponent, CadastroComponent],
   templateUrl: './consult-pix.component.html',
   styleUrl: './consult-pix.component.css'
 })
@@ -18,6 +19,11 @@ export class ConsultPixComponent implements OnInit, OnDestroy{
 
   referencia!: Subscription;
   titulo: any = {};
+
+  cadastro = false;
+  nomeBanco = '';
+  documento = '';
+  documentoBanco = '';
 
   constructor(private route: ActivatedRoute, private tituloService: TituloService) {
 
@@ -30,6 +36,11 @@ export class ConsultPixComponent implements OnInit, OnDestroy{
         next: (data) => {
           this.titulo = data;
           console.log(data);
+          if(data.cliente.solicitarCadastro) {
+            this.cadastro = true;
+            this.nomeBanco = data.cliente.nome;
+            this.documentoBanco = data.cliente.cpf;
+          }
         },
         error: (error) => {
           console.log(error);
