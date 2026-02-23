@@ -1,6 +1,6 @@
 export const environment = {
     sede: 3,
-    urlApi: 'http://localhost:8080',
+    urlApi: 'https://api.titulo.click',
     titulo: 'Guanambi Premiável',
     subTitulo: 'Bilhete Premiável - Gunambi Premiável',
     rodape: 'Ao adquirir o GUANAMBI PREMIÁVEL você colabora com a ONG EM BOAS MÃOS, promovendo o acesso à todas as pessoas de pouco ou nenhum recurso a realizar tratamentos multidisciplinares e intervenções reparadoras, e ainda, concorre a valiosos prêmios. Os bens oferecidos como prêmio são meramente ilustrativos. O BILHETE PREMIÁVEL GUANAMBI PREMIÁVEL, é uma promoção aprovada pela SEAE/ME. Antes de contratar, consulte previamente o Regulamento/Condições Gerais.',
