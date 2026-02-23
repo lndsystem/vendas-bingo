@@ -9,36 +9,8 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from '@angular/router';
-import { TooltipModule } from 'primeng/tooltip';
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-
-
-export function cpfMiddleDigitsValidator(expectedMiddleDigits: string): ValidatorFn {
-  return (control: AbstractControl): ValidationErrors | null => {
-    const cpf = control.value as string;
-
-    // Remove máscara: "123.456.789-00" → "12345678900"
-    const cpfClean = cpf?.replace(/\D/g, '') ?? '';
-
-    // Verifica se o CPF foi completamente preenchido (11 dígitos)
-    if (cpfClean.length < 11) {
-      return { cpfIncomplete: true };
-    }
-
-    // Extrai os 6 dígitos do meio (posições 3 a 8, índice 3..8)
-    // CPF: XXX . [YYY.YYY] - ZZ  →  índices 3,4,5,6,7,8
-    const middleDigits = cpfClean.substring(3, 9);
-
-    console.log(middleDigits);
-    console.log(expectedMiddleDigits);
-
-    if (middleDigits !== expectedMiddleDigits.replace(/\D/g, '')) {
-      return { cpfMiddleMismatch: true };
-    }
-
-    return null;
-  };
-}
+import { cpfMiddleDigitsValidator } from '../validation/document.validatior';
+import { cpfValidator } from '../validation/cpf.validator';
 
 @Component({
   selector: 'app-cadastro',
@@ -62,11 +34,14 @@ export class CadastroComponent implements OnInit, OnChanges {
   @Input() documento: string = ''; 
   @Input() nome: string = '';
   @Input() documentoBanco: string = '';
-
+  @Input()titulo: any = {};
+  
   loading = false;
+  loadingSave = false;
   
   estados: any[] = [];
   municipios: any[] = [];
+
 
   myForm!: FormGroup;
 
@@ -93,7 +68,7 @@ export class CadastroComponent implements OnInit, OnChanges {
   initForm() {
     this.myForm = new FormGroup({
       nome: new FormControl(this.nome, [Validators.required, Validators.minLength(5)]),
-      cpf: new FormControl(this.documento, [Validators.required, cpfMiddleDigitsValidator(this.documentoBanco)]),
+      cpf: new FormControl(this.documento, [Validators.required, cpfMiddleDigitsValidator(this.documentoBanco), cpfValidator()]),
       celular: new FormControl('', Validators.required),
       uf: new FormControl('', []),
       municipio: new FormControl('', Validators.required),
@@ -106,7 +81,7 @@ export class CadastroComponent implements OnInit, OnChanges {
   }
 
   preencherFormulario() {
-    console.log('Preencher formulario')
+    
   }
 
   getMunicipios(event: any) {
@@ -121,13 +96,19 @@ export class CadastroComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.myForm.valid) {
-      this.tituloService.salvarCliente(this.myForm.value).subscribe({
+      const body = this.myForm.value;
+      body.referencia = this.titulo.titulo;
+
+      this.loadingSave = true
+      this.tituloService.salvarCliente(body).subscribe({
         next: (data) => {
           this.visible = false;
+          this.loadingSave = false;
         },
         error: (data) => {
           console.log(data);
-        }
+          this.loadingSave = false;
+        },
       })
     }
   }

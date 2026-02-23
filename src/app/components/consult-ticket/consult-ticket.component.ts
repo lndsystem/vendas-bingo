@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { Panel, PanelModule } from 'primeng/panel';
@@ -6,14 +6,17 @@ import { NumberFormatPipe } from '../../pipe/number-format.pipe';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from "@angular/router";
 import { DatePipe } from '@angular/common';
+import { JsonPipe } from '@angular/common';
+import { environment } from '../../../environments/environment';
+
 
 @Component({
   selector: 'app-consult-ticket',
-  imports: [Panel, Button, Dialog, NumberFormatPipe, PanelModule, DatePipe],
+  imports: [Panel, Button, Dialog, NumberFormatPipe, PanelModule, DatePipe, JsonPipe],
   templateUrl: './consult-ticket.component.html',
   styleUrl: './consult-ticket.component.css'
 })
-export class ConsultTicketComponent implements OnInit {
+export class ConsultTicketComponent implements OnInit, OnChanges {
 
   @Input() titulos:any[] =  [];
   
@@ -22,10 +25,28 @@ export class ConsultTicketComponent implements OnInit {
   premios: any[] = [];
   sorteioJaOcorreu = false;
 
+  semTitulos = false;
+
+  cartelas: any[] = [];
+  bilhetes: any[] = [];
+
+  textoStatus = 'Carregando os dados...';
+
   constructor(private tituloService: TituloService, private format: NumberFormatPipe, private router : Router) {
   }
   
   ngOnInit(): void {
+  }
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['titulos'] && changes['titulos'].currentValue && changes['titulos'].currentValue.length == 0) {
+      this.semTitulos = true;
+      setTimeout(() => {
+        this.textoStatus = 'Nenhum título encontrado para o documento informado.';
+      }, 3000)
+    } else {
+      this.semTitulos = false;
+    }
   }
 
   verBilhetes(ticket: any) {
@@ -33,31 +54,32 @@ export class ConsultTicketComponent implements OnInit {
     const dataSorteio = new Date(`${ticket.dataSorteio}T${ticket.hora}`);
     
     this.sorteioJaOcorreu = false;
-    if (new Date() > dataSorteio) {
-      const token = sessionStorage.getItem('token-agro');
-      if (token) {
-        const session = JSON.parse(token);
-        const dataToken = new Date(session.expiresAt);
+    const token = sessionStorage.getItem(`token-${environment.prefix}`);
+    if (token) {
+      const session = JSON.parse(token);
+      const dataToken = new Date(session.expiresAt);
 
-        if (dataToken < new Date()) {
-          this.router.navigate(['/']);  
-        } else {
-          this.tituloService.getDetalhesTitulo(session.token, ticket.idSorteio, ticket.titulo).subscribe({
-            next: (data) => {
-              this.premios = data;
-              this.visible = true;
-              this.sorteioJaOcorreu = true;
-            }
-          })
-        }
+      if (dataToken < new Date()) {
+        this.router.navigate(['/']);  
+      } else {
+        this.tituloService.getDetalhesTitulo(session.token, ticket.idSorteio, ticket.titulosArray).subscribe({
+          next: (data) => {
+            this.premios = data;
+            this.visible = true;
+            this.cartelas = JSON.parse(ticket.cartelas.replace(/\]\[/g, '],['));
+            this.bilhetes = JSON.parse(ticket.titulosArray);
+          }
+        })
       }
-    } else {
-      this.visible = true;
     }
   }
 
   bolaSorteada(dezena: number, dezenas: number[]) {
     return dezenas.includes(dezena) ? 'dezena-premiada' : ''
+  }
+
+  verificarGanhador(cartela: number[], dezenasSorteadas: number[]) {
+    return cartela.every(dezena => dezenasSorteadas.includes(dezena));
   }
 
   converterTituloArray(titulo: number) {

@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from '@angular/router';
 import { CadastroComponent } from "../cadastro/cadastro.component";
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-consulta',
@@ -27,7 +28,7 @@ export class ConsultaComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    sessionStorage.removeItem('token-agro');
+    sessionStorage.removeItem(`token-${environment.prefix}`);
   }
 
   pesquisar() {
@@ -35,21 +36,9 @@ export class ConsultaComponent implements OnInit {
       this.exibirMsg = true;
     }else {
       this.exibirMsg = false;
-
-      /*const token = sessionStorage.getItem('token-agro');
-      if(token) {
-        
-        const session = JSON.parse(token);
-        const dataToken = new Date(session.expiresAt);
-        if(new Date() < dataToken) {
-          this.router.navigate(['/consulta']);
-          return;
-        }
-      }*/
-
       this.tituloService.getClient(this.documento).subscribe({
         next: (data) => {
-          sessionStorage.setItem('token-agro', JSON.stringify(data));
+          sessionStorage.setItem(`token-${environment.prefix}`, JSON.stringify(data));
           this.router.navigate(['/consulta']);
         },
         error: (error) => {

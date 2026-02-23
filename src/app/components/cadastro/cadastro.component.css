@@ -9,3 +9,7 @@
 ::ng-deep .p-inputmask.p-inputtext:focus {
   border-color: blue;
 }
+
+::ng-deep .p-inputtext:enabled:focus {
+    border-color: blue !important;
+}

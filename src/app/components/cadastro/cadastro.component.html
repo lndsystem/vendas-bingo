@@ -14,7 +14,10 @@
                 <label for="cpf"  title="Obrigatório" pTooltip="Obrigatório">CPF  <span style="color: red" >*</span></label>
                 <p-inputmask id="cpf" mask="999.999.999-99" placeholder="999.999.999-99" [style]="{width: '100%'}" formControlName="cpf"></p-inputmask>
                 @if (cpfControl?.touched && cpfControl?.hasError('cpfMiddleMismatch')) {
-                    <small class="p-error">CPF não corresponde ao cadastrado. {{documentoBanco}}.</small>
+                    <p><small class="p-error">CPF não corresponde do pagamento PIX. {{documentoBanco}}.</small></p>
+                }
+                @if (cpfControl?.touched && cpfControl?.hasError('cpfInvalid')) {
+                    <p><small class="p-error">CPF inválido.</small></p>
                 }
             </div>
             <div class="col-12 md:col-6">
@@ -35,7 +38,7 @@
                         (onChange)="getMunicipios($event)"
                     />
                     @if (loading) {
-                    <p-progress-spinner strokeWidth="6" fill="transparent" animationDuration=".5s" [style]="{ width: '32px', height: '32px' }" />
+                        <p-progress-spinner strokeWidth="6" fill="transparent" animationDuration=".5s" [style]="{ width: '32px', height: '32px' }" />
                     }
                 </div>
             </div>
@@ -61,7 +64,10 @@
                 Ao se cadastrar, você autoriza a Agro Mania a comunicar-se via e-mail, SMS e WhatsApp.
             </div>
             <div class="col-12">
-                <button pButton (click)="onSubmit()" [disabled]="!myForm.valid">Salvar</button>
+                <button pButton (click)="onSubmit()" [disabled]="!myForm.valid || loadingSave">Salvar</button>
+                @if (loadingSave) {
+                    <p-progress-spinner strokeWidth="6" fill="transparent" animationDuration=".5s" [style]="{ width: '32px', height: '32px' }" />
+                }
             </div>
         </div>
     </form>

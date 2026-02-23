@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ResultTicketComponent } from '../../components/result-ticket/result-ticket.component';
 import { HeaderComponent } from '../../components/header/header.component';
 import { ConsultTicketComponent } from '../../components/consult-ticket/consult-ticket.component';
 import { Router } from '@angular/router';
 import { TituloService } from '../../service/titulo.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-consult',
@@ -16,11 +16,11 @@ export class ConsultComponent implements OnInit{
   titulos: any[] = [];
 
   constructor(private tituloService: TituloService, private router: Router) {
-    //sessionStorage.removeItem('token-agro');
+    
   }
 
   ngOnInit(): void {
-    const token = sessionStorage.getItem('token-agro');
+    const token = sessionStorage.getItem(`token-${environment.prefix}`);
     if (token) {
       const session = JSON.parse(token);
       const dataToken = new Date(session.expiresAt);
@@ -29,7 +29,7 @@ export class ConsultComponent implements OnInit{
         this.router.navigate(['/']);  
       } else {
         this.tituloService.getTitulosUsuarios(session.token).subscribe({
-          next: (data) => {
+          next: (data) => {            
             this.titulos = data;
           }
         });
