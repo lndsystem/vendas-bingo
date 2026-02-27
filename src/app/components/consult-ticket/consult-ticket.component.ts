@@ -12,13 +12,21 @@ import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-consult-ticket',
-  imports: [Panel, Button, Dialog, NumberFormatPipe, PanelModule, DatePipe, JsonPipe],
+  imports: [Panel, Button, Dialog, NumberFormatPipe, PanelModule, DatePipe],
   templateUrl: './consult-ticket.component.html',
   styleUrl: './consult-ticket.component.css'
 })
 export class ConsultTicketComponent implements OnInit, OnChanges {
 
-  @Input() titulos:any[] =  [];
+  private _titulos: any[] = [];
+
+  @Input() set titulos(value: any[]) {
+    this._titulos = value ?? [];
+  }
+
+  get titulos(): any[] {
+    return this._titulos;
+  }
   
   visible = false;
   ticketSelecionado: any = {};
@@ -39,13 +47,16 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['titulos'] && changes['titulos'].currentValue && changes['titulos'].currentValue.length == 0) {
-      this.semTitulos = true;
-      setTimeout(() => {
-        this.textoStatus = 'Nenhum título encontrado para o documento informado.';
-      }, 3000)
-    } else {
-      this.semTitulos = false;
+    if (changes['titulos']) {
+      const current = changes['titulos'].currentValue ?? [];
+      if (current.length === 0) {
+        this.semTitulos = true;
+        setTimeout(() => {
+          this.textoStatus = 'Nenhum título encontrado para o documento informado.';
+        }, 3000);
+      } else {
+        this.semTitulos = false;
+      }
     }
   }
 

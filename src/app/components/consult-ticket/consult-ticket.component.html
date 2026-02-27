@@ -60,7 +60,7 @@
                             </div>
                             <div class="info-row-bottom-value">
                                 <span class="info-label">Total:&nbsp;</span>
-                                <span class="info-value-bold">R$ {{ ticket.valor | numberFormat : 0:'0':'.':',':2}}</span>
+                                <span class="info-value-bold">R$ {{ (ticket?.valor ?? 0) | numberFormat : 0:'0':'.':',':2}}</span>
                                 <div class="icons-container-value">
                                     <i class="pi pi-gem icons-end"></i>
                                     <i class="pi pi-check-circle icons-end"></i>
@@ -103,7 +103,7 @@
                     @if (premio.tipo === 'SORTEIO') {                        
                             @for(c of cartelas; track $index;let i = $index ) {
                                 <div class="col-12 md:col-6 lg:col-4">
-                                    <h4 style="text-align: center;">Bilhete: {{ bilhetes[i] | numberFormat : 6}}</h4>
+                                    <h4 style="text-align: center;">Bilhete: {{ (bilhetes[i] ?? 0) | numberFormat : 6}}</h4>
                                     <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid #ccc; border-radius: 8px; padding: 10px;"
                                         [style.background-color]="verificarGanhador(c, premio.dezenas)? 'lightgreen' : 'white'">
                                         <div class="dezenas-grid">
