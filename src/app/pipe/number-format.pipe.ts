@@ -25,6 +25,10 @@ export class NumberFormatPipe implements PipeTransform {
       return '';
     }
 
+    if (typeof value === 'object') {
+      return ''; // evita crash com objetos inesperados
+    }
+
     // Converte para número
     const numValue = typeof value === 'string' ? parseFloat(value) : value;
 
@@ -65,45 +69,3 @@ export class NumberFormatPipe implements PipeTransform {
     return result;
   }
 }
-
-/*
-import { Component } from '@angular/core';
-import { NumberFormatPipe } from './number-format.pipe';
-
-@Component({
-  selector: 'app-exemplo',
-  standalone: true,
-  imports: [NumberFormatPipe],
-  template: `
-    <div>
-      <h3>Exemplos de Formatação:</h3>
-      
-      <!-- Exemplo 1: Apenas milhar -->
-      <p>{{ 1234567 | numberFormat }}</p>
-      <!-- Resultado: 1.234.567 -->
-      
-      <!-- Exemplo 2: Com padding de 10 caracteres -->
-      <p>{{ 12345 | numberFormat:10 }}</p>
-      <!-- Resultado: 0.000.012.345 -->
-      
-      <!-- Exemplo 3: Padding com outro caractere -->
-      <p>{{ 789 | numberFormat:8:'#' }}</p>
-      <!-- Resultado: #####789 -->
-      
-      <!-- Exemplo 4: Com decimais -->
-      <p>{{ 1234.56 | numberFormat:0:'0':'.':',':2 }}</p>
-      <!-- Resultado: 1.234,56 -->
-      
-      <!-- Exemplo 5: Formato brasileiro completo -->
-      <p>{{ 99999.99 | numberFormat:10:'0':'.':',':2 }}</p>
-      <!-- Resultado: 00.099.999,99 -->
-      
-      <!-- Exemplo 6: Formato americano -->
-      <p>{{ 1234567.89 | numberFormat:0:'0':',':'.' }}</p>
-      <!-- Resultado: 1,234,567.89 -->
-    </div>
-  `
-})
-export class ExemploComponent {}
-*/
-
