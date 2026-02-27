@@ -108,7 +108,7 @@
                                         [style.background-color]="verificarGanhador(c, premio.dezenas)? 'lightgreen' : 'white'">
                                         <div class="dezenas-grid">
                                             @for (dezena of c; track $index) {
-                                                <div class="dezena-circle  {{premio.dezenas.includes(dezena) ? 'dezena-premiada' : ''}}" >{{ dezena }}</div>
+                                                <div class="dezena-circle  {{premio?.dezenas?.includes(dezena) ? 'dezena-premiada' : ''}}" >{{ dezena }}</div>
                                             }
                                         </div>
                                     </div>
@@ -116,7 +116,7 @@
                             }
                     } @else {
                         @for(c of cartelas; track $index;let i = $index ) {
-                            <div class="col-3 text-center"  style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;" [style.background-color]="premio.dezenas.includes(c) ? 'lightgreen' : 'white'">
+                            <div class="col-3 text-center"  style="border: 1px solid #ccc; border-radius: 8px; padding: 10px;" [style.background-color]="premio?.dezenas?.includes(c) ? 'lightgreen' : 'white'">
                                 <h3>Bilhete: {{ bilhetes[i] | numberFormat : 6}}</h3>
                             </div>
                         }

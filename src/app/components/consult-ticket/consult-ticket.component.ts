@@ -86,11 +86,11 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
 
   bolaSorteada(dezena: number, dezenas: number[]) {
-    return dezenas.includes(dezena) ? 'dezena-premiada' : ''
+    return dezenas?.includes(dezena) ? 'dezena-premiada' : ''
   }
 
   verificarGanhador(cartela: number[], dezenasSorteadas: number[]) {
-    return cartela.every(dezena => dezenasSorteadas.includes(dezena));
+    return cartela.every(dezena => dezenasSorteadas?.includes(dezena));
   }
 
   converterTituloArray(titulo: number) {
