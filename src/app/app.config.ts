@@ -13,6 +13,11 @@ import { DatePipe } from '@angular/common';
 import { NumberFormatPipe } from './pipe/number-format.pipe';
 import { MessageService } from 'primeng/api';
 
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+
+registerLocaleData(localePt);
+
 const MyPreset = definePreset(Aura, {
     semantic: {
         primary: {
