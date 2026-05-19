@@ -10,11 +10,13 @@
             </div>
         </div>
         <div class="lnd-rodape-header">
-            
-            <a routerLink="/resultado" pButton type="button" style="text-decoration: none;" label="Resultado"></a>
-            
-            <a routerLink="/" pButton type="button" style="text-decoration: none;" label="Consulta"></a>
-            
+            <a routerLink="/resultado" pButton type="button" style="text-decoration: none;" label="Resultado"></a>            
+            @if (!comprar) {
+                <a routerLink="/"  pButton type="button" style="text-decoration: none;" label="Consulta"></a>
+            }
+            @if (comprar) {
+                <a routerLink="/comprar" pButton type="button" style="text-decoration: none;" label="Comprar"></a>
+            }
         </div>
     </div>
 </p-panel>

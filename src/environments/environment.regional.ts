@@ -1,6 +1,6 @@
 export const environment = {    
     sede: 6,
-    urlApi: 'http://localhost:8080',
+    urlApi: 'https://api.titulo.click',
     titulo: 'Regional da Sorte',
     subTitulo: 'Bilhete Premiável - Regional da Sorte',
     rodape: 'Ao adquirir o Regional da Sorte você colabora com a Associação Brasileira de Apoio aos Portadores de AIDS - ABRPA., e ainda, concorre a valiosos prêmios. Os bens oferecidos como prêmio são meramente ilustrativos. O BILHETE PREMIÁVEL REGIONAL DA SORTE, é uma promoção aprovada pela SEAE/ME. Antes de contratar, consulte previamente o Regulamento/Condições Gerais.',

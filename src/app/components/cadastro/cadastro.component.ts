@@ -42,7 +42,6 @@ export class CadastroComponent implements OnInit, OnChanges {
   estados: any[] = [];
   municipios: any[] = [];
 
-
   myForm!: FormGroup;
 
   constructor(private tituloService: TituloService, private router : Router) {

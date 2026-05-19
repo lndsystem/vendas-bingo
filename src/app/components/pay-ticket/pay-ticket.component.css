@@ -1,0 +1,19 @@
+.dezenas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 5px;
+}
+
+.dezena-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #dc2626;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin: 0 auto;
+}

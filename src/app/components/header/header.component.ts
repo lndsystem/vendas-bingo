@@ -13,6 +13,9 @@ import { environment } from '../../../environments/environment';
 })
 export class HeaderComponent implements OnInit {
   environment = environment;
+
+  @Input() comprar: boolean = false;  
+  
   ngOnInit(): void {
   }
 }

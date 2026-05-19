@@ -43,6 +43,14 @@ export class TituloService {
     return this.http.get<any[]>(`${this.urlApi}/sorteios/ganhadores/${code.sede}/${code.sorteio}`, this._criarHeaderSede());
   }
 
+  isExistClient(documento: string) {
+    return this.http.get<any>(`${this.urlApi}/clientes/${documento}/exist`, this._criarHeaderSede());
+  }
+
+  getTituloComprar() {
+    return this.http.get<any>(`${this.urlApi}/titulos/random`, this._criarHeaderSede());
+  }
+
   // Consultar Cliente e Titulos
   getClient(documento: string) {
     return this.http.post<any>(`${this.urlApi}/clientes`, {cpf : documento}, this._criarHeaderSede());

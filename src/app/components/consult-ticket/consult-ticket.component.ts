@@ -47,6 +47,7 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if (changes['titulos']) {
       const current = changes['titulos'].currentValue ?? [];
       if (current.length === 0) {
@@ -61,6 +62,8 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
 
   verBilhetes(ticket: any) {
+
+    console.log(ticket);
     this.ticketSelecionado = ticket;
     const dataSorteio = new Date(`${ticket.dataSorteio}T${ticket.hora}`);
     
