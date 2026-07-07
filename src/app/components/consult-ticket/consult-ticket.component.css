@@ -18,7 +18,7 @@
 }
 
 .card {
-    border: 1px solid #b3d9ff;
+    border: 1px solid var(--p-button-primary-background);
     border-radius: 12px;
     padding: 8px;
     background-color: #ffffff;
@@ -43,7 +43,7 @@
 }
 
 .draw-info-card {
-    border: 1px solid #b3d9ff;
+    border: 1px solid var(--p-button-primary-background);
     border-radius: 8px;
     padding: 12px;
     background-color: #ffffff;
@@ -158,12 +158,12 @@
 }
 
 .icons-end {
-    color: #94a3b8;
+    color: var(--p-button-primary-background);
     font-size: 1.1rem;
 }
 
 .icons-end:last-of-type {
-    color: #60a5fa;
+    color: var(--p-button-primary-background);
 }
 
 .card-footer {
@@ -173,7 +173,7 @@
 }
 
 ::ng-deep .btn-ver-bilhetes {
-    border-color: #b3d9ff !important;
+    border-color: var(--p-button-primary-background) !important;
     color: #1e293b !important;
     background-color: #ffffff !important;
     border-radius: 8px !important;
@@ -195,8 +195,8 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: lightgray;
-    color: black;
+    background-color: var(--p-button-primary-background);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;

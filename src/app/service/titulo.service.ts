@@ -60,6 +60,10 @@ export class TituloService {
     return this.http.get<any[]>(`${this.urlApi}/titulos/listar`, this._criarHeader(token));
   }
 
+  getDadosPagamento(referencia: string) {
+    return this.http.get<any>(`${this.urlApi}/titulos/pagamento/${referencia}/pix`, this._criarHeaderSede());
+  }
+
   getDetalhesTitulo(token: string, sorteio: number, titulo: string) {
     return this.http.get<any[]>(`${this.urlApi}/titulos/detalhes/${sorteio}?titulo=${titulo.substring(1,titulo.length-1).replaceAll(" ", "")}`, this._criarHeader(token));
   }
@@ -78,5 +82,9 @@ export class TituloService {
 
   verificarReferencia(referencia: string) {
     return this.http.get<any>(`${this.urlApi}/titulos/${referencia}`, this._criarHeaderSede());
+  }
+
+  criarCompra(sorteio: number, cpf: string, titulos: number[], bilhetes: string[]) {
+    return this.http.post<any>(`${this.urlApi}/titulos/compras/${sorteio}/criar`, {cpf : cpf, titulos : titulos, bilhetes : bilhetes}, this._criarHeaderSede());
   }
 }

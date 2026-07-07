@@ -15,23 +15,23 @@ import { MessageService } from 'primeng/api';
 
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
+import { environment } from '../environments/environment';
 
 registerLocaleData(localePt);
 
 const MyPreset = definePreset(Aura, {
     semantic: {
         primary: {
-            50: '{red.50}',
-            100: '{red.100}',
-            200: '{red.200}',
-            300: '{red.300}',
-            400: '{red.400}',
-            500: '{red.500}',
-            600: '{red.600}',
-            700: '{red.700}',
-            800: '{red.800}',
-            900: '{red.900}',
-            950: '{red.950}'
+            50: environment.primary[50],
+            100: environment.primary[100],
+            200: environment.primary[200],
+            300: environment.primary[300],
+            400: environment.primary[400],
+            500: environment.primary[500],
+            600: environment.primary[600],
+            700: environment.primary[700],
+            800: environment.primary[800],
+            900: environment.primary[900]
         }
     }
 });

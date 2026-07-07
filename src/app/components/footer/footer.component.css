@@ -24,7 +24,7 @@
 }
 
 .footer-contact {
-    background-color: #e53e3e;
+    background-color: var(--p-button-primary-background);
     padding: 10px;
     text-align: center;
 }

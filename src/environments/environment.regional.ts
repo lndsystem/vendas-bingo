@@ -1,3 +1,4 @@
+//urlApi: 'https://api.titulo.click',
 export const environment = {    
     sede: 6,
     urlApi: 'https://api.titulo.click',
@@ -9,5 +10,20 @@ export const environment = {
     endereco: 'Avenida Raimundo Bonfim, s/n, Coopirece, Irecê - BA',
     logo: 'images/logo_regional.jpg',
     favicon: 'images/logo_regional.jpg',
-    prefix: 'agromania'
+    prefix: 'agromania',
+
+    primaryColorHex: '#0000CD',
+
+    primary: {
+        50: '#e6e6fa',
+        100: '#b3b3f5',
+        200: '#8080f0',
+        300: '#4d4deb',
+        400: '#1a1ae6',
+        500: '#0000CD',
+        600: '#0000b3',
+        700: '#000099',
+        800: '#000080',
+        900: '#000066'
+    }
 };

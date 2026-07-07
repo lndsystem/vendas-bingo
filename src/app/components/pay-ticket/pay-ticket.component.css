@@ -8,7 +8,7 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background-color: #dc2626;
+    background-color: var(--p-button-primary-background);
     color: #ffffff;
     display: flex;
     align-items: center;
@@ -17,3 +17,248 @@
     font-size: 0.9rem;
     margin: 0 auto;
 }
+
+.check-bolinha {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 26px;
+    height: 26px;
+    border: 2px solid #ccc;
+    border-radius: 50%;
+    background-color: #ffffff;
+    cursor: pointer;
+    position: relative;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    vertical-align: middle;
+}
+
+.check-bolinha:hover {
+    border-color: #22c55e;
+}
+
+.check-bolinha:checked {
+    border-color: #22c55e;
+    background-color: #22c55e;
+}
+
+.check-bolinha:checked::after {
+    content: "";
+    position: absolute;
+    left: 8px;
+    top: 4px;
+    width: 6px;
+    height: 11px;
+    border: solid #ffffff;
+    border-width: 0 2.5px 2.5px 0;
+    transform: rotate(45deg);
+}
+
+.botao-comprar-flutuante {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(4px);
+}
+
+.compra-resumo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.compra-resumo-flutuante {
+    max-width: 720px;
+    margin: 0 auto;
+    justify-content: space-between;
+}
+
+.compra-resumo-acoes {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.compra-resumo-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    min-width: 0;
+}
+
+.compra-resumo-qtd {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.compra-resumo-valor {
+    font-weight: 700;
+    font-size: 1.15rem;
+    color: #111;
+}
+
+.botao-comprar-flutuante :host ::ng-deep .botao-comprar-flutuante-btn,
+.botao-comprar-flutuante ::ng-deep .botao-comprar-flutuante-btn {
+    flex-shrink: 0;
+    min-width: 140px;
+}
+
+.tempo-expiracao-pix {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 16px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    background-color: #fff8e1;
+    border: 1px solid #ffc107;
+}
+
+.tempo-expiracao-label {
+    display: block;
+    font-size: 0.95rem;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.tempo-expiracao-valor {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #d97706;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Estilos para o modal de pagamento aprovado */
+
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f4f6f8;
+  }
+  
+  /* Caixa do PIX */
+  .pix-box {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 450px;
+    text-align: center;
+  }
+  
+  .pix-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 25px;
+  }
+  
+  .pix-logo {
+    height: 35px;
+  }
+  
+  .qr-code-wrapper {
+    padding: 20px;
+    border: 2px dashed #03b898;
+    border-radius: 12px;
+    display: inline-block;
+    background-color: #fafafa;
+  }
+  
+  .copia-cola-wrapper {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+  }
+  
+  .input-payload {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 12px;
+    color: #555;
+    background: #f9f9f9;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+  
+  .btn-copiar {
+    background: #03b898;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+  }
+  
+  .btn-copiar:hover {
+    background: #02947a;
+  }
+  
+  .instrucao {
+    margin-top: 15px;
+    font-size: 13px;
+    color: #777;
+  }
+  
+  /* Caixa de Sucesso Verdinha */
+  .success-box {
+    background: white;
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .circle-green {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #03b898;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px auto;
+    box-shadow: 0 4px 15px rgba(3, 184, 152, 0.4);
+  }
+  
+  .checkmark {
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+  }
+  
+  .success-box h2 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .success-box p {
+    color: #666;
+  }
+
+  .payment-acoes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }

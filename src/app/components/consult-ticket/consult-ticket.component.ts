@@ -6,13 +6,26 @@ import { NumberFormatPipe } from '../../pipe/number-format.pipe';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from "@angular/router";
 import { DatePipe } from '@angular/common';
-import { JsonPipe } from '@angular/common';
 import { environment } from '../../../environments/environment';
+import { MessageService } from 'primeng/api';
+import { QRCodeComponent } from 'angularx-qrcode';
+import { AccordionModule } from 'primeng/accordion';
+import { InputTextModule } from 'primeng/inputtext';
 
 
 @Component({
   selector: 'app-consult-ticket',
-  imports: [Panel, Button, Dialog, NumberFormatPipe, PanelModule, DatePipe],
+  imports: [
+    Panel, 
+    Button, 
+    Dialog, 
+    InputTextModule,
+    NumberFormatPipe, 
+    PanelModule, 
+    DatePipe,  
+    QRCodeComponent,
+    AccordionModule
+  ],
   templateUrl: './consult-ticket.component.html',
   styleUrl: './consult-ticket.component.css'
 })
@@ -40,14 +53,23 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
 
   textoStatus = 'Carregando os dados...';
 
-  constructor(private tituloService: TituloService, private format: NumberFormatPipe, private router : Router) {
+  pagamentoPendente = false;
+  pagamentoConfirmado = false;
+
+  dadosPagamento: any = {};
+
+  constructor(
+    private tituloService: TituloService, 
+    private format: NumberFormatPipe, 
+    private router : Router,
+    private message: MessageService) {
+
   }
   
   ngOnInit(): void {
   }
   
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes['titulos']) {
       const current = changes['titulos'].currentValue ?? [];
       if (current.length === 0) {
@@ -62,8 +84,6 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
 
   verBilhetes(ticket: any) {
-
-    console.log(ticket);
     this.ticketSelecionado = ticket;
     const dataSorteio = new Date(`${ticket.dataSorteio}T${ticket.hora}`);
     
@@ -103,5 +123,43 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
       array.push(v.substring(i,i+1));
     }
     return array;
+  }
+
+  carregarPagamentoPendente(ticket: any) {
+    this.tituloService.getDadosPagamento(ticket.referencia).subscribe({
+      next: (data) => {
+        this.dadosPagamento = data;
+        this.pagamentoPendente = true;
+      },
+      error: (error) => {
+        console.log(error);
+        this.message.add({severity: 'error', summary: 'Erro', detail: 'Erro ao carregar dados de pagamento'});
+      }
+    });
+  }
+
+  irParaConsulta(): void {
+    this.router.navigate(['/']);
+  }
+
+  irParaResultado(): void {
+    this.router.navigate(['/resultado']);
+  }
+
+  async copiarConteudo(texto: string) {
+    try {
+    await navigator.clipboard.writeText(texto);
+    this.message.add({severity: 'info', summary: 'Informativo', detail: 'Código do PIX \ncopiado com sucesso!'});
+    } catch (err) {
+      console.log('Erro ao copiar: ', err);
+    }
+  }
+
+  formatarValor(valor: number): string {
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2
+    }).format(valor);
   }
 }

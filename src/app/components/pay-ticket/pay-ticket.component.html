@@ -2,10 +2,13 @@
     <div class="container">
         @if (podeComprar) {
             <h3 style="text-align: center; margin-bottom: 20px;">Comprador: {{nomeComprador}}</h3>
+            <p style="text-align: center; margin-bottom: 20px;">Data do Sorteio: {{dataSorteio}}.</p>
             <div class="grid">
                 @for (titulo of tituloComprar; track titulo.numeroTitulo) {
                     <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin: 5px">
-                        <input type="checkbox" [value]="titulo.numeroTitulo" />
+                        <input type="checkbox" class="check-bolinha" [value]="titulo.numeroTitulo" [(ngModel)]="titulo.selecionado" [ngModelOptions]="{ standalone: true }" />
+                        
+                        <h4 style="text-align: center; font-weight: bold; margin-bottom: 10px;">{{titulo.descricao}}</h4>
                         @for(dezena of titulo.combinacoesLista; track dezena; let i = $index) {
                             <h4 style="text-align: center;">Bilhete: {{titulo.titulosLista[i]}}</h4>
                             <div class="col-12 md:col-6 lg:col-4">
@@ -28,15 +31,63 @@
                     </div>
                 }
                 
+
+                @if (semSorteio) {
+                    <div class="col-12">
+                        {{semSorteio.mensagem}}
+                    </div>
+                }
+                
                 <!-- Botão de comprar -->
-                <div class="col-12 text-center">
-                    <p-button label="Comprar" />
-                </div>
+                @if (liberadoComprar) {
+                    <div #botaoComprar class="col-12 compra-resumo">
+                        <div class="compra-resumo-info">
+                            <span class="compra-resumo-qtd">{{ quantidadeTitulosSelecionados }} título(s) selecionado(s)</span>
+                            <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
+                        </div>
+                        <div class="compra-resumo-acoes">
+                            <p-button label="Comprar" (click)="comprar()" />
+                            <p-button
+                                label="Recarregar ({{ recarregamentosRestantes }})"
+                                icon="pi pi-refresh"
+                                severity="secondary"
+                                outlined
+                                [disabled]="!podeRecarregar"
+                                [loading]="loadingRecarregar"
+                                (click)="recarregar()"
+                            />
+                        </div>
+                    </div>
+                }
             </div>
         }
     </div>
 </p-panel>
+<div style="height: 15px"></div>
 
+@if (liberadoComprar && podeComprar && !botaoVisivel) {
+    <div class="botao-comprar-flutuante">
+        <div class="compra-resumo compra-resumo-flutuante">
+            <div class="compra-resumo-info">
+                <span class="compra-resumo-qtd">{{ quantidadeTitulosSelecionados }} título(s) selecionado(s)</span>
+                <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
+            </div>
+            <div class="compra-resumo-acoes">
+                <p-button label="Comprar" styleClass="botao-comprar-flutuante-btn" (click)="comprar()" />
+                <p-button
+                    label="Recarregar ({{ recarregamentosRestantes }})"
+                    icon="pi pi-refresh"
+                    severity="secondary"
+                    outlined
+                    styleClass="botao-comprar-flutuante-btn"
+                    [disabled]="!podeRecarregar"
+                    [loading]="loadingRecarregar"
+                    (click)="recarregar()"
+                />
+            </div>
+        </div>
+    </div>
+}
 
 <p-dialog [modal]="true" [(visible)]="visible" closeOnEscape="false" closable="false" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template #header>
@@ -125,4 +176,65 @@
             }
         </div>
     
+</p-dialog>
+
+<p-dialog [modal]="true" [(visible)]="visiblePix" closeOnEscape="false" closable="false" [style]="{ width: '50rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
+    @if (!pagamentoConfirmado) {
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <div id="tempo-expiracao" class="tempo-expiracao-pix">
+            @if (tempoExpiracaoPix) {
+                <span class="tempo-expiracao-label">Tempo restante para pagamento:</span>
+                <span class="tempo-expiracao-valor">{{ tempoExpiracaoPix }}</span>
+            }
+        </div>
+        <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+            <h3>Pague {{ formatarValor(valorTotalSelecionado) }} via Pix para comprar os títulos</h3>
+        </div>
+        <div style="width: 100%; text-align: center; margin-bottom: 20px;">
+            <p style="font-weight: bold; font-size: 1.2rem; color: #000;">Código da compra: {{ dadosPagamento?.identificador }}</p>
+        </div>
+        <div style="width: 100%; text-align: left; margin-bottom: 20px;">
+            <h3 style="margin-bottom: 10px;">Escaneie um código QR para pagar</h3>
+            <ul>
+                <li>1. Acesse seu Internet Banking ou app de pagamentos.</li>
+                <li>2. Escolha pagar via Pix.</li>
+                <li>3. Escaneie o seguinte código:</li>
+            </ul>            
+        </div>
+        <div style="width: 100%; text-align: center; margin-bottom: 20px; margin-top: 20px;">
+            <qrcode [qrdata]="dadosPagamento?.copieCola ?? ''" [width]="256" [errorCorrectionLevel]="'M'" [allowEmptyString]="true"></qrcode>
+        </div>
+        <hr style="width: 100%; margin-bottom: 10px; margin-top: 10px; border: 1px solid #ccc;"/>
+        <div style="width: 100%; text-align: left; margin-bottom: 10px;">
+            <h3>Ou copie este código para fazer o pagamento</h3>
+        </div>
+        <div style="width: 100%; text-align: left; margin-bottom: 10px;">
+            <p>Escolha pagar via Pix pelo seu Internet Banking ou app de pagamentos. Depois, cole o seguinte código:</p>
+        </div>
+        <div style="width: 100%; text-align: left; margin-bottom: 10px;">
+            <input pInputText [style]="{width: '100%'}" [value]="dadosPagamento.copieCola" readonly />
+        </div>
+        <div style="width: 100%; text-align: left;">
+            <p-button label="Copiar código"  #copy  (click)="copiarConteudo(dadosPagamento.copieCola)"/>
+        </div>
+    </div>
+    }
+
+    @if (pagamentoConfirmado) {
+    <div class="payment-container">
+        <div class="success-box" >
+            <div class="success-icon animate__animated animate__zoomIn">
+              <div class="circle-green">
+                <i class="checkmark">✓</i>
+              </div>
+            </div>
+            <h2>Pagamento Confirmado!</h2>
+            <p>Seu pedido foi processado com sucesso. Obrigado!</p>
+            <div class="payment-acoes">
+                <p-button label="Consulta" (click)="irParaConsulta()" />
+                <p-button label="Resultado" severity="secondary" outlined (click)="irParaResultado()" />
+            </div>
+          </div> 
+    </div>
+    }
 </p-dialog>
