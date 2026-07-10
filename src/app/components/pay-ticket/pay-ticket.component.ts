@@ -80,7 +80,6 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   recarregamentosUsados = 0;
   readonly maxRecarregamentos = 5;
-  loadingRecarregar = false;
 
   visiblePix = false;
   dadosPagamento: any = {};
@@ -147,7 +146,7 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   get podeRecarregar(): boolean {
-    return this.recarregamentosRestantes > 0 && !this.loadingRecarregar;
+    return this.recarregamentosRestantes > 0;
   }
 
   formatarValor(valor: number): string {
@@ -244,8 +243,6 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
       return;
     }
 
-    this.loadingRecarregar = true;
-
     this.carregarTitulos();
   }
 
@@ -253,14 +250,12 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
     this.tituloService.getTituloComprar().subscribe({
       next: (data) => {
         this.liberadoComprar = true;
-        this.loadingRecarregar = false;
         this.tituloComprar = this.normalizarTitulos(data.titulos);
         this.dataSorteio = data.data;
         this.sorteioId = data.sorteioId;
         this.recarregamentosUsados++;
       },
       error: (error) => {
-        this.loadingRecarregar = false;
         if (error.status === 422) {
           this.semSorteio = error.error;
           this.liberadoComprar = false;

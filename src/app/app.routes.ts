@@ -8,6 +8,7 @@ import { ComprarComponent } from './pages/comprar/comprar.component';
 export const routes: Routes = [
     { path: '', component: HomeComponent},
     { path: 'consulta', component: ConsultComponent},
+    { path: 'consulta/:vendedor', component: ConsultComponent},
     { path: 'resultado', component: ResultComponent},
     { path: 'pix/:referencia', component: ConsultPixComponent},
     { path: 'comprar', component: ComprarComponent},

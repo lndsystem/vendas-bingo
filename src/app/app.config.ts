@@ -8,7 +8,7 @@ import Aura from '@primeng/themes/aura';
 import { routes } from './app.routes';
 
 import { definePreset } from '@primeng/themes';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
 import { NumberFormatPipe } from './pipe/number-format.pipe';
 import { MessageService } from 'primeng/api';
@@ -16,6 +16,7 @@ import { MessageService } from 'primeng/api';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { environment } from '../environments/environment';
+import { loadingInterceptor } from './interceptors/loading.interceptor';
 
 registerLocaleData(localePt);
 
@@ -43,7 +44,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     MessageService, 
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([loadingInterceptor])),
     DatePipe,
     NumberFormatPipe,
     providePrimeNG({
