@@ -4,7 +4,11 @@
     </div>
     
     <div class="footer-contact">
-        <p class="footer-contact-line">{{environment.telefone}} | {{environment.email}}</p>
+        <p class="footer-contact-line">
+            <a [href]="environment.whatsapp" style="text-decoration: none; color: inherit;"
+                target="_blank" 
+                rel="noopener noreferrer"> <i class="pi pi-whatsapp"></i> {{environment.telefone}}
+            </a> | {{environment.email}}</p>
         <p class="footer-contact-line">{{environment.endereco}}</p>
     </div>
 </div>

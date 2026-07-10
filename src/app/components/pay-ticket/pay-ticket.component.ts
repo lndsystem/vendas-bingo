@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -7,13 +7,15 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { InputTextModule } from 'primeng/inputtext';
 import { PanelModule } from 'primeng/panel';
 import { TituloService } from '../../service/titulo.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Subscription } from 'rxjs';
 import { PagamentoSseService } from '../../service/pagamento-sse.service';
+import { environment } from '../../../environments/environment';
+import { isValidCpf } from '../validation/cpf.validator';
 
 @Component({
   selector: 'app-pay-ticket',
@@ -34,6 +36,11 @@ import { PagamentoSseService } from '../../service/pagamento-sse.service';
   styleUrl: './pay-ticket.component.css'
 })
 export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
+  private route = inject(ActivatedRoute);
+
+  vendedor = '';
+
+  premiacaoUrl = environment.urlResultado;
 
   @ViewChild('botaoComprar') botaoComprar?: ElementRef<HTMLElement>;
 
@@ -51,6 +58,7 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
   myForm!: FormGroup;
 
   documento = '';
+  cpfErro = '';
 
   podeComprar = false;
 
@@ -93,6 +101,11 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.route.params.subscribe(params => {
+      this.vendedor = params['vendedor'];
+    });
+
+    console.log(this.vendedor);
   }
 
   ngAfterViewChecked(): void {
@@ -186,31 +199,39 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
   }
 
   entrar() {
-    if(this.documento.replace(/\D/g, '').length == 11) {
-      const cpfLimpo = this.documento.replace(/\D/g, '');
+    const cpfLimpo = this.documento.replace(/\D/g, '');
 
-      this.cpfComprador = cpfLimpo;
-
-      this.tituloService.isExistClient(cpfLimpo).subscribe({
-        next: (data) => {
-          this.visible = false;
-          this.nomeComprador = data.nome;
-          this.podeComprar = true;
-          
-          this.carregarTitulos();
-        },
-        error: (error) => {
-          this.tituloService.getEstados().subscribe({
-            next: (data) => {
-              this.estados = data.map(e => { return {name: e.nome, code: e.sigla}; }) 
-            }
-          });
-          this.initForm()
-          this.precisaCadastrar = true;
-        }
-      });
+    if (cpfLimpo.length < 11) {
+      this.cpfErro = 'CPF incompleto.';
       return;
     }
+
+    if (!isValidCpf(cpfLimpo)) {
+      this.cpfErro = 'CPF inválido.';
+      return;
+    }
+
+    this.cpfErro = '';
+    this.cpfComprador = cpfLimpo;
+
+    this.tituloService.isExistClient(cpfLimpo).subscribe({
+      next: (data) => {
+        this.visible = false;
+        this.nomeComprador = data.nome;
+        this.podeComprar = true;
+
+        this.carregarTitulos();
+      },
+      error: (error) => {
+        this.tituloService.getEstados().subscribe({
+          next: (data) => {
+            this.estados = data.map(e => { return {name: e.nome, code: e.sigla}; })
+          }
+        });
+        this.initForm()
+        this.precisaCadastrar = true;
+      }
+    });
   }
 
   recarregar() {
@@ -317,7 +338,9 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   irParaResultado(): void {
     this.finalizarPagamento();
-    this.router.navigate(['/resultado']);
+    // this.router.navigate(['/resultado']);
+
+    window.open(this.premiacaoUrl, '_blank', 'noopener,noreferrer');
   }
 
   private finalizarPagamento(): void {

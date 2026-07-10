@@ -18,7 +18,7 @@ export function cpfValidator(): ValidatorFn {
 }
 
 // Lógica de validação do CPF (cálculo dos dígitos)
-function isValidCpf(cpf: string): boolean {
+export function isValidCpf(cpf: string): boolean {
   if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) {
     return false;
   }

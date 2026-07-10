@@ -103,7 +103,11 @@
                         placeholder="999.999.999-99" 
                         [style]="{width: '100%'}" 
                         [(ngModel)]="documento"
+                        (ngModelChange)="cpfErro = ''"
                     ></p-inputmask>
+                    @if (cpfErro) {
+                        <p style="color: red; margin-top: 5px;"><small class="p-error">{{ cpfErro }}</small></p>
+                    }
                 </div>
                 <div class="col-12 text-center">
                     <p-button label="Entrar" (click)="entrar()" />

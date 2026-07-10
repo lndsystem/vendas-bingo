@@ -10,7 +10,14 @@
             </div>
         </div>
         <div class="lnd-rodape-header">
-            <a routerLink="/resultado" pButton type="button" style="text-decoration: none;" label="Resultado"></a>            
+            <!--<a routerLink="/resultado" pButton type="button" style="text-decoration: none;" label="Resultado"></a>-->
+            <a [href]="environment.urlResultado" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                pButton 
+                style="text-decoration: none;">
+                <span pButtonLabel>Resultado</span>
+            </a>
             @if (!comprar) {
                 <a routerLink="/"  pButton type="button" style="text-decoration: none;" label="Consulta"></a>
             }

@@ -11,5 +11,6 @@ export const routes: Routes = [
     { path: 'resultado', component: ResultComponent},
     { path: 'pix/:referencia', component: ConsultPixComponent},
     { path: 'comprar', component: ComprarComponent},
+    { path: 'comprar/:vendedor', component: ComprarComponent},
     { path: '**', redirectTo: "/"}
 ];
