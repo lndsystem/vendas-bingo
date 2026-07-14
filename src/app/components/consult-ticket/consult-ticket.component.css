@@ -27,7 +27,48 @@
     gap: 8px;
     
     min-width: 0;
+    position: relative;
     /* overflow: hidden; */
+}
+
+.card-com-marca {
+    overflow: hidden;
+}
+
+.marca-dagua {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.marca-dagua span {
+    display: block;
+    width: 140%;
+    text-align: center;
+    transform: rotate(-28deg);
+    font-size: clamp(1rem, 4.2vw, 1.35rem);
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    line-height: 1.25;
+    user-select: none;
+}
+
+.marca-dagua-cancelado span {
+    color: rgba(220, 38, 38, 0.4);
+}
+
+.marca-dagua-concorrendo span {
+    color: rgba(22, 163, 74, 0.45);
+}
+
+.marca-dagua-pendente span {
+    color: rgba(59, 130, 246, 0.4);
 }
 
 .card-inner {
@@ -227,7 +268,8 @@
 }
 
 .dezena-premiada {
-    background-color: var(--p-button-primary-hover-background);
+    background-color: rgba(0, 128, 0, 0.5);
+    border: 1px solid red;
     color: white;
 }
 

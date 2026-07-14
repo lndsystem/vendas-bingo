@@ -162,4 +162,42 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
       minimumFractionDigits: 2
     }).format(valor);
   }
+
+  tituloCancelado(ticket: any): boolean {
+    return ticket.statusPagamento === 7 || (ticket.statusPagamento === 2 && ticket.status === 'F');
+  }
+
+  temMarcaDagua(ticket: any): boolean {
+    return ticket.statusPagamento === 3
+      || ticket.statusPagamento === 2
+      || ticket.statusPagamento === 7;
+  }
+
+  classeMarcaDagua(ticket: any): string {
+    if (this.tituloCancelado(ticket)) {
+      return 'marca-dagua-cancelado';
+    }
+
+    if (ticket.statusPagamento === 3) {
+      return 'marca-dagua-concorrendo';
+    }
+
+    return 'marca-dagua-pendente';
+  }
+
+  textoMarcaDagua(ticket: any): string {
+    if (this.tituloCancelado(ticket)) {
+      return 'Título cancelado<br>por falta de pagamento';
+    }
+
+    if (ticket.statusPagamento === 3) {
+      return 'Título<br>Concorrendo';
+    }
+
+    return 'Pendente de<br>Pagamento';
+  }
+
+  bilheteDesabilitado(ticket: any): boolean {
+    return this.tituloCancelado(ticket);
+  }
 }

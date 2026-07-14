@@ -13,8 +13,13 @@
                     <p-accordion-content>
                         <div class="grid ">
                             @for (ticket of sorteios.titulos; track ticket.referencia) {
-                                <div class="col-12 md:col-6 lg:col-4">
-                                    <div class="card">
+                                <div class="col-12 md:col-6 lg:col-4" id="ticket-{{ticket.referencia}}">
+                                    <div class="card" [class.card-com-marca]="temMarcaDagua(ticket)">
+                                        @if (temMarcaDagua(ticket)) {
+                                            <div class="marca-dagua" [class]="classeMarcaDagua(ticket)" aria-hidden="true">
+                                                <span [innerHTML]="textoMarcaDagua(ticket)"></span>
+                                            </div>
+                                        }
                                         <div class="card-inner">
                                             <!-- Seção Esquerda: Data e Horário -->
                                             <div class="card-left">
@@ -80,6 +85,7 @@
                                                 [outlined]="true"
                                                 (click)="verBilhetes(ticket)"
                                                 styleClass="btn-ver-bilhetes"
+                                                [disabled]="bilheteDesabilitado(ticket)"
                                             />
                 
                                             @if(ticket.statusPagamento === 2 && ticket.status === 'A') {
@@ -182,16 +188,19 @@
 
                     @if (premio.tipo === 'SORTEIO') {                        
                             @for(c of cartelas; track $index;let i = $index ) {
-                                <div class="col-12 md:col-6 lg:col-4">
+                                <div class="col-12 md:col-6 lg:col-4" id="bilhete-resultado-{{bilhetes[i] | numberFormat : 6}}">
                                     <h4 style="text-align: center;">Bilhete: {{ (bilhetes[i] ?? 0) | numberFormat : 6}}</h4>
                                     <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid #ccc; border-radius: 8px; padding: 10px;"
-                                        [style.background-color]="verificarGanhador(c, premio.dezenas)? 'lightgreen' : 'white'">
+                                        [style.background-color]="verificarGanhador(c, premio.dezenas)? ' rgb(216, 191, 216)' : 'white'">
                                         <div class="dezenas-grid">
                                             @for (dezena of c; track $index) {
                                                 <div class="dezena-circle  {{premio?.dezenas?.includes(dezena) ? 'dezena-premiada' : ''}}" >{{ dezena }}</div>
                                             }
                                         </div>
                                     </div>
+                                    @if(verificarGanhador(c, premio.dezenas)) {
+                                    <div style="text-align: center; margin-top: 10px; width: 100%;"><b>BilheteGanhador</b></div>
+                                    }
                                 </div>
                             }
                     } @else {
