@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, inject } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { PanelModule } from 'primeng/panel';
 import { InputMaskModule } from 'primeng/inputmask';
@@ -7,6 +7,7 @@ import { TituloService } from '../../service/titulo.service';
 import { Router } from '@angular/router';
 import { CadastroComponent } from "../cadastro/cadastro.component";
 import { environment } from '../../../environments/environment';
+import { VendedorService } from '../../service/vendedor.service';
 
 @Component({
   selector: 'app-consulta',
@@ -22,6 +23,8 @@ export class ConsultaComponent implements OnInit {
   documento = '';
   exibirMsg = false;
   visible = false;
+
+  private readonly vendedorService = inject(VendedorService);
   
   constructor(private tituloService: TituloService, private router : Router) {
 
@@ -39,7 +42,7 @@ export class ConsultaComponent implements OnInit {
       this.tituloService.getClient(this.documento).subscribe({
         next: (data) => {
           sessionStorage.setItem(`token-${environment.prefix}`, JSON.stringify(data));
-          this.router.navigate(['/consulta']);
+          this.router.navigate(this.vendedorService.path('/consulta'));
         },
         error: (error) => {
           console.log(error);

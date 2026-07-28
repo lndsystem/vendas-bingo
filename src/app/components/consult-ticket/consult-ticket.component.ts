@@ -1,16 +1,17 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { Button } from 'primeng/button';
 import { Dialog } from 'primeng/dialog';
 import { Panel, PanelModule } from 'primeng/panel';
 import { NumberFormatPipe } from '../../pipe/number-format.pipe';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from "@angular/router";
-import { DatePipe } from '@angular/common';
+import { DatePipe, JsonPipe } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { MessageService } from 'primeng/api';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { AccordionModule } from 'primeng/accordion';
 import { InputTextModule } from 'primeng/inputtext';
+import { VendedorService } from '../../service/vendedor.service';
 
 
 @Component({
@@ -23,6 +24,7 @@ import { InputTextModule } from 'primeng/inputtext';
     NumberFormatPipe, 
     PanelModule, 
     DatePipe,  
+    JsonPipe,
     QRCodeComponent,
     AccordionModule
   ],
@@ -32,6 +34,7 @@ import { InputTextModule } from 'primeng/inputtext';
 export class ConsultTicketComponent implements OnInit, OnChanges {
 
   private _titulos: any[] = [];
+  private readonly vendedorService = inject(VendedorService);
 
   @Input() set titulos(value: any[]) {
     this._titulos = value ?? [];
@@ -50,6 +53,7 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
 
   cartelas: any[] = [];
   bilhetes: any[] = [];
+  quina: any[] = [];
 
   textoStatus = 'Carregando os dados...';
 
@@ -94,7 +98,7 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
       const dataToken = new Date(session.expiresAt);
 
       if (dataToken < new Date()) {
-        this.router.navigate(['/']);  
+        this.router.navigate(this.vendedorService.path('/'));  
       } else {
         this.tituloService.getDetalhesTitulo(session.token, ticket.idSorteio, ticket.titulosArray).subscribe({
           next: (data) => {
@@ -102,6 +106,7 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
             this.visible = true;
             this.cartelas = JSON.parse(ticket.cartelas.replace(/\]\[/g, '],['));
             this.bilhetes = JSON.parse(ticket.titulosArray);
+            this.quina = ticket?.quinaArray ?? [];
           }
         })
       }
@@ -139,11 +144,11 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   }
 
   irParaConsulta(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(this.vendedorService.path('/'));
   }
 
   irParaResultado(): void {
-    this.router.navigate(['/resultado']);
+    this.router.navigate(this.vendedorService.path('/resultado'));
   }
 
   async copiarConteudo(texto: string) {

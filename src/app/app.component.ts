@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FooterComponent } from './components/footer/footer.component';
 import { ToastModule } from 'primeng/toast';
 import { environment } from '../environments/environment';
 import { LoadingOverlayComponent } from './components/loading-overlay/loading-overlay.component';
+import { VendedorService } from './service/vendedor.service';
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,9 @@ import { LoadingOverlayComponent } from './components/loading-overlay/loading-ov
 export class AppComponent implements OnInit {
   title = 'vendas-bingo';
   environment = environment;
+
+  // Garante captura do UUID do vendedor desde o boot da aplicação
+  private readonly vendedorService = inject(VendedorService);
 
   ngOnInit(): void {
     this.setFavicon(this.environment.favicon);

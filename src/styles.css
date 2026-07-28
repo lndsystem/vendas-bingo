@@ -45,6 +45,14 @@ body {
     font-size: .9rem;
 }
 
+.lnd-vendedor {
+    display: block;
+    margin-top: 4px;
+    font-size: .95rem;
+    font-weight: 600;
+    color: var(--p-primary-color, #333);
+}
+
 .lnd-titulo-upper {
     text-transform: uppercase;
 }
@@ -92,5 +100,9 @@ body {
 
     .lnd-content {
         text-align: center;
+    }
+
+    .lnd-titulo-comprar {
+        width: 100%;
     }
 }

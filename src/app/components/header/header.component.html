@@ -7,6 +7,9 @@
             <div class="lnd-content">
                 <h2 class="lnd-titulo-upper">{{environment.titulo}}</h2>
                 <span class="lnd-subtitulo">{{environment.subTitulo}}</span>
+                @if (nomeVendedor$ | async; as nomeVendedor) {
+                    <span class="lnd-vendedor">Vendedor: {{ nomeVendedor }}</span>
+                }
             </div>
         </div>
         <div class="lnd-rodape-header">
@@ -19,10 +22,10 @@
                 <span pButtonLabel>Resultado</span>
             </a>
             @if (!comprar) {
-                <a routerLink="/"  pButton type="button" style="text-decoration: none;" label="Consulta"></a>
+                <a [routerLink]="linkConsulta"  pButton type="button" style="text-decoration: none;" label="Consulta"></a>
             }
             @if (comprar) {
-                <a routerLink="/comprar" pButton type="button" style="text-decoration: none;" label="Comprar"></a>
+                <a [routerLink]="linkComprar" pButton type="button" style="text-decoration: none;" label="Comprar"></a>
             }
         </div>
     </div>

@@ -3,62 +3,100 @@
         @if (podeComprar) {
             <h3 style="text-align: center; margin-bottom: 20px;">Comprador: {{nomeComprador}}</h3>
             <p style="text-align: center; margin-bottom: 20px;">Data do Sorteio: {{dataSorteio}}.</p>
-            <div class="grid">
-                @for (titulo of tituloComprar; track titulo.numeroTitulo) {
-                    <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin: 5px">
-                        <input type="checkbox" class="check-bolinha" [value]="titulo.numeroTitulo" [(ngModel)]="titulo.selecionado" [ngModelOptions]="{ standalone: true }" />
-                        
-                        <h4 style="text-align: center; font-weight: bold; margin-bottom: 10px;">{{titulo.descricao}}</h4>
-                        @for(dezena of titulo.combinacoesLista; track dezena; let i = $index) {
-                            <h4 style="text-align: center;">Bilhete: {{titulo.titulosLista[i]}}</h4>
-                            <div class="col-12 md:col-6 lg:col-4">
-                                <div class="card">
-                                    <div class="card-inner" style="width: 100%;">
+
+            <p-tabs value="0">
+                <p-tablist>
+                    @for (produto of produtos; track produto; let i = $index) {
+                        <p-tab value="{{i.toString()}}">{{ produto }}</p-tab>
+                    }
+                </p-tablist>
+                <p-tabpanels>
+                    @for (produto of produtos; track produto; let i = $index) {
+                    <p-tabpanel value="{{i.toString()}}">
+                        <div class="grid">
+                            @for (titulo of tituloComprar; track titulo.numeroTitulo) {
+                                @if(titulo.descricao === produto) {
+                                <div style="border: 1px solid #ccc; border-radius: 8px; padding: 10px; margin: 5px" class="lnd-titulo-comprar">
+                                    <input type="checkbox" class="check-bolinha" [value]="titulo.numeroTitulo" [(ngModel)]="titulo.selecionado" [ngModelOptions]="{ standalone: true }" />
+                                    
+                                    <h4 style="text-align: center; font-weight: bold; margin-bottom: 10px;">{{titulo.descricao}}</h4>
+                                    @for(dezena of titulo.combinacoesLista; track dezena; let i = $index) {
+                                        <h4 style="text-align: center;">Bilhete: {{titulo.titulosLista[i]}}</h4>
                                         <div class="col-12 md:col-6 lg:col-4">
-                                            <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid #ccc; border-radius: 8px; padding: 10px;"
-                                                >
-                                                <div class="dezenas-grid">
-                                                    @for (d of titulo.combinacoesLista[i]; track $index) {
-                                                        <div class="dezena-circle" >{{ d }}</div>
-                                                    }
+                                            <div class="card">
+                                                <div class="card-inner" style="width: 100%;">
+                                                    <div class="col-12 md:col-6 lg:col-4">
+                                                        <div style="width: 240px; margin: 10px auto; text-align: center; border: 1px solid #ccc; border-radius: 8px; padding: 10px;"
+                                                            >
+                                                            <div class="dezenas-grid">
+                                                                @for (d of titulo.combinacoesLista[i]; track $index) {
+                                                                    <div class="dezena-circle" >{{ d | number:'2.0-0'}}</div>
+                                                                }
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                        @if (titulo.quinaList.length > 0) {
+                                            <h4 style="text-align: center; color: var(--p-primary-500); font-weight: bold; padding-top: 3px;">Prêmio Quina: {{titulo.titulosLista[0]}}</h4>
+                                            <div class="col-12 md:col-6 lg:col-4" style="padding-top: 0px;">
+                                                <div class="card">
+                                                    <div class="card-inner" style="width: 100%; padding-top: 0px;">
+                                                        <div class="col-12 md:col-6 lg:col-4" style="padding-top: 0px;">
+                                                            <div style="width: 240px; margin: 10px auto; text-align: center; border: 2px solid var(--p-primary-500); border-radius: 8px; padding: 10px;"
+                                                                >
+                                                                <div class="dezenas-grid">
+                                                                    @for (d of titulo.quinaList[i]; track $index) {
+                                                                        <div class="dezena-circle" >{{ d | number:'2.0-0' }}</div>
+                                                                    }
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+        
+                                    }
+                                </div>
+                                }
+                            }
+                            
+                            @if (semSorteio) {
+                                <div class="col-12">
+                                    {{semSorteio.mensagem}}
+                                </div>
+                            }
+                            
+                            <!-- Botão de comprar -->
+                            @if (liberadoComprar) {
+                                <div #botaoComprar class="col-12 compra-resumo">
+                                    <div class="compra-resumo-info">
+                                        <span class="compra-resumo-qtd">{{ quantidadeTitulosSelecionados }} título(s) selecionado(s)</span>
+                                        <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
+                                    </div>
+                                    <div class="compra-resumo-acoes">
+                                        <p-button label="Comprar" (click)="comprar()" />
+                                        <p-button
+                                            label="Recarregar ({{ recarregamentosRestantes }})"
+                                            icon="pi pi-refresh"
+                                            severity="secondary"
+                                            outlined
+                                            [disabled]="!podeRecarregar"
+                                            (click)="recarregar()"
+                                        />
                                     </div>
                                 </div>
-                            </div>
-                        }
-                    </div>
-                }
+                            }
+                        </div>
+                    </p-tabpanel>
+                    }
+                </p-tabpanels>
                 
+            </p-tabs>
 
-                @if (semSorteio) {
-                    <div class="col-12">
-                        {{semSorteio.mensagem}}
-                    </div>
-                }
-                
-                <!-- Botão de comprar -->
-                @if (liberadoComprar) {
-                    <div #botaoComprar class="col-12 compra-resumo">
-                        <div class="compra-resumo-info">
-                            <span class="compra-resumo-qtd">{{ quantidadeTitulosSelecionados }} título(s) selecionado(s)</span>
-                            <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
-                        </div>
-                        <div class="compra-resumo-acoes">
-                            <p-button label="Comprar" (click)="comprar()" />
-                            <p-button
-                                label="Recarregar ({{ recarregamentosRestantes }})"
-                                icon="pi pi-refresh"
-                                severity="secondary"
-                                outlined
-                                [disabled]="!podeRecarregar"
-                                (click)="recarregar()"
-                            />
-                        </div>
-                    </div>
-                }
-            </div>
+            
         }
     </div>
 </p-panel>

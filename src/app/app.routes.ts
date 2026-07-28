@@ -10,8 +10,10 @@ export const routes: Routes = [
     { path: 'consulta', component: ConsultComponent},
     { path: 'consulta/:vendedor', component: ConsultComponent},
     { path: 'resultado', component: ResultComponent},
+    { path: 'resultado/:vendedor', component: ResultComponent},
     { path: 'pix/:referencia', component: ConsultPixComponent},
     { path: 'comprar', component: ComprarComponent},
     { path: 'comprar/:vendedor', component: ComprarComponent},
+    { path: ':vendedor', component: HomeComponent},
     { path: '**', redirectTo: "/"}
 ];

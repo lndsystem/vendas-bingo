@@ -10,12 +10,14 @@ import { TituloService } from '../../service/titulo.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { TabsModule } from 'primeng/tabs';
 import { MessageService } from 'primeng/api';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Subscription } from 'rxjs';
 import { PagamentoSseService } from '../../service/pagamento-sse.service';
 import { environment } from '../../../environments/environment';
 import { isValidCpf } from '../validation/cpf.validator';
+import { VendedorService } from '../../service/vendedor.service';
 
 @Component({
   selector: 'app-pay-ticket',
@@ -30,6 +32,7 @@ import { isValidCpf } from '../validation/cpf.validator';
     ButtonModule,
     ReactiveFormsModule,
     ProgressSpinnerModule,
+    TabsModule,
     QRCodeComponent
   ],
   templateUrl: './pay-ticket.component.html',
@@ -37,8 +40,7 @@ import { isValidCpf } from '../validation/cpf.validator';
 })
 export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
   private route = inject(ActivatedRoute);
-
-  vendedor = '';
+  private readonly vendedorService = inject(VendedorService);
 
   premiacaoUrl = environment.urlResultado;
 
@@ -76,6 +78,8 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   premios: any = [];
 
+  produtos: any[] = [];
+
   semSorteio: any = {};
 
   recarregamentosUsados = 0;
@@ -101,10 +105,10 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
-      this.vendedor = params['vendedor'];
+      if (params['vendedor']) {
+        this.vendedorService.setVendedor(params['vendedor']);
+      }
     });
-
-    console.log(this.vendedor);
   }
 
   ngAfterViewChecked(): void {
@@ -254,6 +258,11 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.dataSorteio = data.data;
         this.sorteioId = data.sorteioId;
         this.recarregamentosUsados++;
+
+        this.produtos = Array.from(new Set(this.normalizarTitulos(data.titulos).map(i => i.descricao)));
+        
+
+
       },
       error: (error) => {
         if (error.status === 422) {
@@ -306,12 +315,21 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
           this.iniciarContadorPix();
         },
         error: (error) => {
-          console.log(error)
-          this.message.add({
-            severity: 'error',
-            summary: 'Erro',
-            detail: 'Erro ao criar compra.'
-          });
+          if (error.status === 403) {
+            this.message.add({
+              severity: 'warn',
+              summary: 'Alerta',
+              detail: error.error.mensagem,
+              life: 10000
+            });
+          }else {
+            console.log(error)
+            this.message.add({
+              severity: 'error',
+              summary: 'Erro',
+              detail: 'Erro ao criar compra.'
+            });
+          }
         }
       });
     }
@@ -328,7 +346,7 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   irParaConsulta(): void {
     this.finalizarPagamento();
-    this.router.navigate(['/']);
+    this.router.navigate(this.vendedorService.path('/'));
   }
 
   irParaResultado(): void {

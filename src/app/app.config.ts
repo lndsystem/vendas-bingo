@@ -17,6 +17,7 @@ import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import { environment } from '../environments/environment';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
+import { vendedorInterceptor } from './interceptors/vendedor.interceptor';
 
 registerLocaleData(localePt);
 
@@ -44,7 +45,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     MessageService, 
-    provideHttpClient(withInterceptors([loadingInterceptor])),
+    provideHttpClient(withInterceptors([loadingInterceptor, vendedorInterceptor])),
     DatePipe,
     NumberFormatPipe,
     providePrimeNG({

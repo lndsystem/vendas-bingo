@@ -51,6 +51,10 @@ export class TituloService {
     return this.http.get<any>(`${this.urlApi}/titulos/random`, this._criarHeaderSede());
   }
 
+  getVendedor() {
+    return this.http.get<any>(`${this.urlApi}/titulos/vendedor`, this._criarHeaderSede());
+  }
+
   // Consultar Cliente e Titulos
   getClient(documento: string) {
     return this.http.post<any>(`${this.urlApi}/clientes`, {cpf : documento}, this._criarHeaderSede());
