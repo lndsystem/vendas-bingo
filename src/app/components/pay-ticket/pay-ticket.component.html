@@ -4,10 +4,10 @@
             <h3 style="text-align: center; margin-bottom: 20px;">Comprador: {{nomeComprador}}</h3>
             <p style="text-align: center; margin-bottom: 20px;">Data do Sorteio: {{dataSorteio}}.</p>
 
-            <p-tabs value="0">
+            <p-tabs [value]="tabAtiva" (valueChange)="onTabChange($event)" class="tabs-responsivo">
                 <p-tablist>
                     @for (produto of produtos; track produto; let i = $index) {
-                        <p-tab value="{{i.toString()}}">{{ produto }}</p-tab>
+                        <p-tab value="{{i.toString()}}">{{ produto }} ({{ quantidadeSelecionadosPorProduto(produto) }})</p-tab>
                     }
                 </p-tablist>
                 <p-tabpanels>
@@ -61,8 +61,9 @@
                                     }
                                 </div>
                                 }
-                            }
+                            },
                             
+
                             @if (semSorteio) {
                                 <div class="col-12">
                                     {{semSorteio.mensagem}}
@@ -77,6 +78,15 @@
                                         <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
                                     </div>
                                     <div class="compra-resumo-acoes">
+                                        <p-button
+                                            icon="pi pi-eraser"
+                                            severity="secondary"
+                                            outlined
+                                            pTooltip="Desmarcar todos"
+                                            tooltipPosition="top"
+                                            [disabled]="quantidadeTitulosSelecionados === 0"
+                                            (click)="desmarcarTodos()"
+                                        />
                                         <p-button label="Comprar" (click)="comprar()" />
                                         <p-button
                                             label="Recarregar ({{ recarregamentosRestantes }})"
@@ -110,6 +120,16 @@
                 <span class="compra-resumo-valor">{{ formatarValor(valorTotalSelecionado) }}</span>
             </div>
             <div class="compra-resumo-acoes">
+                <p-button
+                    icon="pi pi-eraser"
+                    severity="secondary"
+                    outlined
+                    styleClass="botao-comprar-flutuante-btn"
+                    pTooltip="Desmarcar todos"
+                    tooltipPosition="top"
+                    [disabled]="quantidadeTitulosSelecionados === 0"
+                    (click)="desmarcarTodos()"
+                />
                 <p-button label="Comprar" styleClass="botao-comprar-flutuante-btn" (click)="comprar()" />
                 <p-button
                     label="Recarregar ({{ recarregamentosRestantes }})"

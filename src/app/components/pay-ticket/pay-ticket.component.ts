@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewChecked, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SelectModule } from 'primeng/select';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { TabsModule } from 'primeng/tabs';
+import { TooltipModule } from 'primeng/tooltip';
 import { MessageService } from 'primeng/api';
 import { QRCodeComponent } from 'angularx-qrcode';
 import { Subscription } from 'rxjs';
@@ -33,22 +34,25 @@ import { VendedorService } from '../../service/vendedor.service';
     ReactiveFormsModule,
     ProgressSpinnerModule,
     TabsModule,
+    TooltipModule,
     QRCodeComponent
   ],
   templateUrl: './pay-ticket.component.html',
   styleUrl: './pay-ticket.component.css'
 })
-export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
+export class PayTicketComponent implements OnInit, AfterViewInit, OnDestroy {
   private route = inject(ActivatedRoute);
   private readonly vendedorService = inject(VendedorService);
 
   premiacaoUrl = environment.urlResultado;
 
-  @ViewChild('botaoComprar') botaoComprar?: ElementRef<HTMLElement>;
+  @ViewChildren('botaoComprar') botoesComprar?: QueryList<ElementRef<HTMLElement>>;
 
+  tabAtiva = '0';
   botaoVisivel = false;
   private observer?: IntersectionObserver;
   private elementoObservado?: HTMLElement;
+  private botoesComprarChangesSub?: Subscription;
 
   visible = true;
   estados: any[] = [];
@@ -111,24 +115,59 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
     });
   }
 
-  ngAfterViewChecked(): void {
-    const elemento = this.botaoComprar?.nativeElement;
+  ngAfterViewInit(): void {
+    this.botoesComprarChangesSub = this.botoesComprar?.changes.subscribe(() => {
+      this.reconectarObserverBotao();
+    });
 
-    if (elemento && elemento !== this.elementoObservado) {
-      this.elementoObservado = elemento;
-      this.observer?.disconnect();
-      this.observer = new IntersectionObserver(
-        ([entry]) => {
-          this.botaoVisivel = entry.isIntersecting;
-        },
-        { threshold: 0.1 }
-      );
-      this.observer.observe(elemento);
+    this.reconectarObserverBotao();
+  }
+
+  onTabChange(tab: string | number): void {
+    this.tabAtiva = String(tab);
+    this.elementoObservado = undefined;
+    this.botaoVisivel = false;
+
+    queueMicrotask(() => this.reconectarObserverBotao());
+  }
+
+  private reconectarObserverBotao(): void {
+    const indice = Number(this.tabAtiva);
+    const elemento = this.botoesComprar?.get(indice)?.nativeElement;
+
+    if (!elemento) {
+      return;
     }
+
+    if (elemento === this.elementoObservado) {
+      this.atualizarVisibilidadeBotao(elemento);
+      return;
+    }
+
+    this.elementoObservado = elemento;
+    this.observer?.disconnect();
+    this.observer = new IntersectionObserver(
+      ([entry]) => {
+        this.botaoVisivel = entry.isIntersecting;
+      },
+      { threshold: 0.1 }
+    );
+    this.observer.observe(elemento);
+    this.atualizarVisibilidadeBotao(elemento);
+  }
+
+  private atualizarVisibilidadeBotao(elemento: HTMLElement): void {
+    const rect = elemento.getBoundingClientRect();
+    const alturaVisivel = window.innerHeight || document.documentElement.clientHeight;
+
+    this.botaoVisivel = rect.height > 0
+      && rect.top < alturaVisivel
+      && rect.bottom > 0;
   }
 
   ngOnDestroy(): void {
     this.observer?.disconnect();
+    this.botoesComprarChangesSub?.unsubscribe();
     this.pararContadorPix();
     if (this.sseSubscription) {
       this.sseSubscription.unsubscribe();
@@ -143,6 +182,18 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
     return this.tituloComprar
       .filter((titulo: any) => titulo.selecionado)
       .reduce((total: number, titulo: any) => total + (Number(titulo.preco) || 0), 0);
+  }
+
+  quantidadeSelecionadosPorProduto(produto: string): number {
+    return this.tituloComprar.filter(
+      (titulo: any) => titulo.descricao === produto && titulo.selecionado
+    ).length;
+  }
+
+  desmarcarTodos(): void {
+    this.tituloComprar.forEach((titulo: any) => {
+      titulo.selecionado = false;
+    });
   }
 
   get recarregamentosRestantes(): number {
@@ -260,9 +311,11 @@ export class PayTicketComponent implements OnInit, AfterViewChecked, OnDestroy {
         this.recarregamentosUsados++;
 
         this.produtos = Array.from(new Set(this.normalizarTitulos(data.titulos).map(i => i.descricao)));
-        
+        this.tabAtiva = '0';
+        this.elementoObservado = undefined;
+        this.botaoVisivel = false;
 
-
+        queueMicrotask(() => this.reconectarObserverBotao());
       },
       error: (error) => {
         if (error.status === 422) {

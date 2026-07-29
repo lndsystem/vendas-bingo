@@ -262,3 +262,25 @@
     margin-top: 24px;
     flex-wrap: wrap;
   }
+
+  @media screen and (max-width: 768px) {
+    /* Alvo principal: força a lista que envolve os p-tab a virar coluna */
+    :host ::ng-deep .tabs-responsivo .p-tablist-tab-list {
+      flex-direction: column !important;
+      width: 100% !important;
+    }
+  
+    /* Faz cada tag p-tab interna ocupar toda a largura */
+    :host ::ng-deep .tabs-responsivo p-tab,
+    :host ::ng-deep .tabs-responsivo .p-tab {
+      width: 100% !important;
+      display: flex !important;
+      justify-content: center !important;
+      box-sizing: border-box;
+    }
+  
+    /* Esconde ou corrige a barrinha de seleção dinâmica que fica desalinhada na vertical */
+    :host ::ng-deep .tabs-responsivo .p-tablist-active-bar {
+      display: none !important;
+    }
+  }
