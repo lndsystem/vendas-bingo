@@ -52,10 +52,12 @@
                                                         <span class="info-label">Título(s):</span>
                                                         <span class="info-value-bold">{{ ticket.titulosArray.substring(1,ticket.titulosArray.length-1) }}</span>
                                                     </div>
+                                                    @if(false) {
                                                     <div class="info-row">
                                                         <span class="info-label">Premiação:</span>
                                                         <span class="info-value-bold">{{ ticket.premiacao }}</span>
                                                     </div>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -87,7 +89,14 @@
                                                 styleClass="btn-ver-bilhetes"
                                                 [disabled]="bilheteDesabilitado(ticket)"
                                             />
-                
+                                            @if(ticket.statusPagamento === 3 && ticket.pdf) {
+                                            <p-button [style]="{'margin': '0 5px'}"
+                                                [outlined]="true"
+                                                (click)="verBilhetesPdf(ticket)"
+                                                icon="pi pi-file-pdf"
+                                                styleClass="btn-ver-bilhetes"
+                                            ></p-button>
+                                            }
                                             @if(ticket.statusPagamento === 2 && ticket.status === 'A') {
                                             <div style="margin-left: 5px;"></div>
                                             <p-button
@@ -108,6 +117,7 @@
     </div>
 </p-panel>
 
+<!-- Pagamento Pendente Dialog -->
 <p-dialog  [modal]="true" [(visible)]="pagamentoPendente" [style]="{ width: '60rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template #header>
         <h3>Pagamento Pendente</h3>
@@ -168,6 +178,7 @@
 
 </p-dialog>
 
+<!-- Títulos Dialog -->
 <p-dialog  [modal]="true" [(visible)]="visible" [style]="{ width: '60rem' }" [breakpoints]="{ '1199px': '75vw', '575px': '90vw' }">
     <ng-template #header>
         <h3>Títulos - {{bilhetes.length + (bilhetes.length > 1 ? ' Chances' :  ' Chance')}} </h3>
@@ -176,27 +187,32 @@
     @if (premios && premios.length > 0) {
         <div class="container">
             <div class="grid justify-content-center">
-                @for (premio of premios; track $index) {
+                @for (premio of premios; track $index; let x = $index) {
                     <div class="col-12 text-center">
                         @if(premio.imagem) {
                             <img src="https://cdn.titulo.click/{{premio.imagem}}" alt="Imagem do Prêmio" style="max-width: 300px;">
                         } @else {
-                            <h2>{{ premio.descricao }}</h2>
+                            <h2>{{ premio.descricaoPersonalizada }}</h2>
                         }
                     </div>
-
-                    @if (premio.tipo === 'SORTEIO') {                        
-                            @for(c of cartelas; track $index;let i = $index ) {
+                    
+                    @if (premio.tipo === 'SORTEIO') {   
+                            @for(c of  ( premio.quina ? quina : ( premio.sena ? sena :  cartelas) ); track $index;let i = $index ) {
                                 <div class="col-12 md:col-6 lg:col-4" id="bilhete-resultado-{{bilhetes[i] | numberFormat : 6}}">
                                     <h4 style="text-align: center;">Bilhete: {{ (bilhetes[i] ?? 0) | numberFormat : 6}}</h4>
                                     <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid #ccc; border-radius: 8px; padding: 10px;"
                                         [style.background-color]="verificarGanhador(c, premio.dezenas)? ' rgb(216, 191, 216)' : 'white'">
-                                        <div class="dezenas-grid">
+                                        <div class="dezenas-grid {{premio?.sena ? 'dezenas-grid-sena' : ''}}">
                                             @for (dezena of c; track $index) {
-                                                <div class="dezena-circle  {{premio?.dezenas?.includes(dezena) ? 'dezena-premiada' : ''}}" >{{ dezena }}</div>
+                                                <div class="dezena-circle  
+                                                    {{ premio?.dezenas?.includes(dezena) ? 'dezena-premiada' : ''}}" 
+                                                >{{ dezena | number:'2.0-0' }}</div>
                                             }
                                         </div>
                                     </div>
+
+                                    
+
                                     @if(verificarGanhador(c, premio.dezenas)) {
                                     <div style="text-align: center; margin-top: 10px; width: 100%;"><b>BilheteGanhador</b></div>
                                     }
@@ -221,21 +237,34 @@
                         <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid var(--p-button-primary-background); border-radius: 8px; padding: 10px;">
                             <div class="dezenas-grid">
                                 @for (dezena of c; track $index) {
-                                    <div class="dezena-circle">{{ dezena }}</div>
+                                    <div class="dezena-circle">{{ dezena | number:'2.0-0' }}</div>
                                 }
                             </div>
                         </div>
 
+                        <!-- Prêmio Quina -->
                         @if(quina && quina[i]?.length > 0) {
                         <h3 class="text-center">Prêmio Quina: {{ bilhetes[i] | numberFormat : 6}}</h3>
                         <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid var(--p-button-primary-background); border-radius: 8px; padding: 10px;">
                             <div class="dezenas-grid">
                                 @for (dezena of quina[i]; track $index) {
-                                    <div class="dezena-circle">{{ dezena }}</div>
+                                    <div class="dezena-circle">{{ dezena | number:'2.0-0' }}</div>
                                 }
                             </div>
                         </div>
-                        } 
+                        }
+                        
+                        <!-- Prêmio Sena -->
+                        @if(sena && sena[i]?.length > 0) {
+                        <h3 class="text-center">Prêmio Sena: {{ bilhetes[i] | numberFormat : 6}}</h3>
+                        <div style="width: 250px; margin: 10px auto; text-align: center; border: 1px solid var(--p-button-primary-background); border-radius: 8px; padding: 10px;">
+                            <div class="dezenas-grid dezenas-grid-sena">
+                                @for (dezena of sena[i]; track $index) {
+                                    <div class="dezena-circle dezena-circle-sena">{{ dezena | number:'2.0-0' }}</div>
+                                }
+                            </div>
+                        </div>
+                        }
                     </div>
                 }
             </div>

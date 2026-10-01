@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -68,8 +69,18 @@ export class TituloService {
     return this.http.get<any>(`${this.urlApi}/titulos/pagamento/${referencia}/pix`, this._criarHeaderSede());
   }
 
-  getDetalhesTitulo(token: string, sorteio: number, titulo: string) {
-    return this.http.get<any[]>(`${this.urlApi}/titulos/detalhes/${sorteio}?titulo=${titulo.substring(1,titulo.length-1).replaceAll(" ", "")}`, this._criarHeader(token));
+  getDetalhesTitulo(token: string, sorteio: number, referencia: string, titulo: string) {
+    return this.http.get<any[]>(`${this.urlApi}/titulos/detalhes/${sorteio}?referencia=${referencia}&titulo=${titulo.substring(1,titulo.length-1).replaceAll(" ", "")}`, this._criarHeader(token));
+  }
+
+  getDetalhesTituloPdf(token: string, sorteio: number, referencia: string, titulo: string): Observable<Blob> {
+    return this.http.get(
+      `${this.urlApi}/titulos/detalhes/${sorteio}/pdf?referencia=${referencia}&titulo=${titulo.substring(1,titulo.length-1).replaceAll(" ", "")}`, 
+      {
+        headers: this._criarHeader(token).headers, 
+        responseType: 'blob'
+      }
+    );
   }
 
   getEstados() {

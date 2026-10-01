@@ -301,6 +301,10 @@ export class PayTicketComponent implements OnInit, AfterViewInit, OnDestroy {
     this.carregarTitulos();
   }
 
+  getImagemSorteio(produto: string): string {
+    return this.tituloComprar.find((titulo: any) => titulo.descricao === produto)?.linkPropaganda;
+  }
+
   private carregarTitulos() {
     this.tituloService.getTituloComprar().subscribe({
       next: (data) => {
@@ -311,6 +315,7 @@ export class PayTicketComponent implements OnInit, AfterViewInit, OnDestroy {
         this.recarregamentosUsados++;
 
         this.produtos = Array.from(new Set(this.normalizarTitulos(data.titulos).map(i => i.descricao)));
+
         this.tabAtiva = '0';
         this.elementoObservado = undefined;
         this.botaoVisivel = false;

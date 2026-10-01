@@ -5,7 +5,7 @@ import { Panel, PanelModule } from 'primeng/panel';
 import { NumberFormatPipe } from '../../pipe/number-format.pipe';
 import { TituloService } from '../../service/titulo.service';
 import { Router } from "@angular/router";
-import { DatePipe, JsonPipe } from '@angular/common';
+import { DatePipe, DecimalPipe } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { MessageService } from 'primeng/api';
 import { QRCodeComponent } from 'angularx-qrcode';
@@ -24,9 +24,9 @@ import { VendedorService } from '../../service/vendedor.service';
     NumberFormatPipe, 
     PanelModule, 
     DatePipe,  
-    JsonPipe,
     QRCodeComponent,
-    AccordionModule
+    AccordionModule,
+    DecimalPipe
   ],
   templateUrl: './consult-ticket.component.html',
   styleUrl: './consult-ticket.component.css'
@@ -54,6 +54,7 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
   cartelas: any[] = [];
   bilhetes: any[] = [];
   quina: any[] = [];
+  sena: any[] = [];
 
   textoStatus = 'Carregando os dados...';
 
@@ -87,6 +88,36 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
     }
   }
 
+  verBilhetesPdf(ticket: any) {   
+    const token = sessionStorage.getItem(`token-${environment.prefix}`);
+
+    if (token) {
+      const session = JSON.parse(token);
+      const dataToken = new Date(session.expiresAt);
+
+      if (dataToken < new Date()) {
+        this.router.navigate(this.vendedorService.path('/'));  
+      } else {
+        this.tituloService.getDetalhesTituloPdf(session.token, ticket.idSorteio, ticket.referencia,  ticket.titulosArray).subscribe({
+          next: (blob: Blob) => {
+            // Cria um link temporário no DOM para disparar o download
+          const url = window.URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          
+          // Define o nome padrão do arquivo caso o navegador precise
+          link.download = `${ticket.referencia}_${ticket.titulosArray.split(',')[0].replaceAll(' ', '').replace('[', '').replace(']', '')}.pdf`;
+          
+          // Dispara o clique e limpa a memória
+          link.click();
+          window.URL.revokeObjectURL(url);
+          link.remove();
+          }
+        });
+      }
+    }
+  }
+
   verBilhetes(ticket: any) {
     this.ticketSelecionado = ticket;
     const dataSorteio = new Date(`${ticket.dataSorteio}T${ticket.hora}`);
@@ -100,13 +131,14 @@ export class ConsultTicketComponent implements OnInit, OnChanges {
       if (dataToken < new Date()) {
         this.router.navigate(this.vendedorService.path('/'));  
       } else {
-        this.tituloService.getDetalhesTitulo(session.token, ticket.idSorteio, ticket.titulosArray).subscribe({
+        this.tituloService.getDetalhesTitulo(session.token, ticket.idSorteio, ticket.referencia,  ticket.titulosArray).subscribe({
           next: (data) => {
             this.premios = data;
             this.visible = true;
             this.cartelas = JSON.parse(ticket.cartelas.replace(/\]\[/g, '],['));
             this.bilhetes = JSON.parse(ticket.titulosArray);
             this.quina = ticket?.quinaArray ?? [];
+            this.sena = ticket?.senaArray ?? [];
           }
         })
       }
